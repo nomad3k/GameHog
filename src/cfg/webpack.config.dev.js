@@ -1,12 +1,11 @@
 import path from 'path';
-import config from 'config';
+import config from './config';
 let webpack = require('webpack');
 let BowerWebpackPlugin = require('bower-webpack-plugin');
 
 module.exports = {
   entry: [
-    `webpack-dev-server/client?http://127.0.0.1:${config.port}`,
-    'webpack/hot/only-dev-server',
+    // 'webpack/hot/only-dev-server',
     path.join(__dirname, '../client/index.jsx')
   ],
   output: {
@@ -21,11 +20,11 @@ module.exports = {
     }
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new BowerWebpackPlugin({
-      searchResolveModulesDirectories: false
-    })
+    // new webpack.HotModuleReplacementPlugin(),
+    // new webpack.NoErrorsPlugin(),
+    // new BowerWebpackPlugin({
+    //   searchResolveModulesDirectories: false
+    // })
   ],
   module: {
     rules: [
