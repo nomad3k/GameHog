@@ -1,11 +1,13 @@
 html, body {
   margin: 0;
   padding: 0;
-  font-family: helvetica neue
+  font-family: helvetica neue, helvetica, arial, sans-serif;
+  font-size: 16px;
 }
 
 * {
   box-sizing: border-box;
+  color: #444444;
 }
 
 .gh-width--full {
@@ -52,7 +54,7 @@ html, body {
 .gh-player-list {
   display: flex;
   flex-direction: row;
-  background-color: hsla(0, 50%, 75%, 1);
+  background-color: hsla(0, 100%, 75%, 1);
   padding: 6px;
 }
 .gh-player-list__header {
@@ -73,17 +75,22 @@ html, body {
 .gh-player-item {
   margin-left: 2px;
   text-align: center;
-  background-color: hsla(0, 50%, 80%, 1);
+  border: solid 1px #444444;
+  background-color: hsla(0, 80%, 85%, 1);
   min-width: 128px;
   height: 64px;
 }
 
 .gh-player-item:not(.gh-player-item--connected) {
-  background-color: hsla(0, 35%, 80%, 1);
-  color: hsla(0, 0%, 50%, 1);
   font-style: italic;
+  opacity: 0.3;
+}
+.gh-player-item:not(.gh-player-item--connected) * {
 }
 .gh-player-item--connected {
+}
+.gh-player-item--me {
+  background-color: hsla(180, 80%, 85%, 1);
 }
 
 /******************************************************************************/
@@ -107,6 +114,72 @@ html, body {
   flex: 1 1 auto;
 }
 .gh-document-list__content {
+  position: relative;
   flex: 1 1 auto;
   overflow: scroll;
+}
+
+.gh-document-item {
+  background-color: hsla(0, 0%, 100%, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0px 4px 10px #aaaaaa;
+  border: solid 1px #aaaaaa;
+}
+.gh-document-item__header,
+.gh-document-item__content {
+  overflow: hidden;
+}
+.gh-document-item__header {
+  flex: 0 0 auto;
+  padding: 8px;
+}
+.gh-document-item__header-title {
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.gh-document-item__content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.gh-document-item__content > * {
+  flex: 1 1 auto;
+}
+
+/******************************************************************************/
+
+.gh-chat {
+  display: flex;
+  flex-direction: column;
+}
+.gh-chat__input {
+  border-top: solid 1px #aaaaaa;
+  flex: 0 0 auto;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  padding: 8px;
+}
+.gh-chat__input-text {
+  flex: 1 1 auto;
+}
+.gh-chat__input-button {
+  flex: 0 0 auto;
+}
+.gh-chat__output {
+  flex: 1 1 auto;
+  overflow-y: scroll;
+}
+.gh-chat__output-lines {
+  padding: 8px;
+}
+.gh-chat__output-line {
+  font-style: italic;
+  color: #888888;
 }

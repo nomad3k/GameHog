@@ -13,6 +13,7 @@ export const DOCUMENT_REVEALED    = 'Document:Revealed';
 export const DOCUMENT_LOCKED      = 'Document:Locked';
 
 export const CHAT                 = 'Chat';
+export const CHAT_SEND            = 'Chat:Send';
 
 export const MAP                  = 'Map';
 export const MAP_TILE_ADDED       = 'Map:Tile:Added';

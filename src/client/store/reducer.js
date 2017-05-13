@@ -5,21 +5,24 @@ import * as Types from './types';
 const initialState = {
   name: 'Gamehog',
   loading: 0,
+  identity: {
+    id: 'chris'
+  },
   players: {
     'chris': {
-      name: 'Chris Kemp',
+      name: 'Chris',
       connected: true
     },
     'john': {
-      name: 'John Smith',
+      name: 'John',
       connected: true
     },
     'dave': {
-      name: 'Dave Jones',
+      name: 'Dave',
       connected: true
     },
     'tracy': {
-      name: 'Tracy Davis',
+      name: 'Tracy',
       connected: false
     }
   },
@@ -30,11 +33,12 @@ const initialState = {
       players: ['chris', 'john'],
       window: {
         x: 20,
-        y: 0,
+        y: 20,
         width: 320,
-        height: 320
+        height: 300
       },
       data: {
+        nextId: 13,
         lines: [
           { id: 1, text: 'Hello @john', who: 'chris', when: new Date() },
           { id: 2, text: 'Hello @chris', who: 'john', when: new Date() },
@@ -57,9 +61,9 @@ const initialState = {
       players: ['chris', 'john', 'dave', 'tracy'],
       window: {
         x: 360,
-        y: 0,
+        y: 20,
         width: 320,
-        height: 320
+        height: 300
       },
       data: {
       }
@@ -87,6 +91,28 @@ export default function reducer(state = initialState, action) {
       return update(state, {
         loading: { $set: stop(state) }
       });
+
+    case Types.CHAT_SEND: {
+      var message = action.message.trim();
+      let cmd = {
+        documents: { }
+      };
+      var data = state.documents[action.id].data;
+      cmd.documents[action.id] = {
+        data: {
+          nextId: { $set: data.nextId + 1 },
+          lines: {
+            $push: [{
+              id: data.nextId,
+              who: state.identity.id,
+              when: new Date(),
+              text: message
+            }]
+          }
+        }
+      }
+      return update(state, cmd);
+    }
 
     default:
       return state;

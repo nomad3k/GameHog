@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
@@ -9,9 +10,9 @@ import Nav from './nav';
 
 class Template extends React.Component {
   static propTypes = {
-    name: React.PropTypes.string.isRequired,
-    title: React.PropTypes.string.isRequired,
-    loading: React.PropTypes.bool
+    name: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    loading: PropTypes.bool
   }
   static defaultProps = {
     loading: false

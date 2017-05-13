@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Grid, Cell, IconButton } from 'react-mdl';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -9,8 +10,8 @@ import Template from '../containers/template';
 
 class LipsumPage extends React.Component {
   static propTypes = {
-    title: React.PropTypes.string.isRequired,
-    loading: React.PropTypes.bool
+    title: PropTypes.string.isRequired,
+    loading: PropTypes.bool
   }
   onStartClick(_e) {
     const { actions } = this.props;

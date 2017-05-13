@@ -5,10 +5,11 @@ import PlayerItem from './player-item';
 
 export default class PlayerList extends React.Component {
   static propTypes = {
-    players: PropTypes.object.isRequired
+    players: PropTypes.object.isRequired,
+    identity: PropTypes.object.isRequired
   }
   render() {
-    const { players } = this.props;
+    const { players, identity } = this.props;
     const ids = Object.getOwnPropertyNames(players);
     return (
       <div className='gh-player-list'>
@@ -17,7 +18,10 @@ export default class PlayerList extends React.Component {
         </div>
         <div className='gh-player-list__content'>
           {ids.map(id => (
-            <PlayerItem key={id} id={id} player={players[id]} />
+            <PlayerItem key={id}
+                        id={id}
+                        player={players[id]}
+                        me={identity.id == id} />
           ))}
         </div>
       </div>

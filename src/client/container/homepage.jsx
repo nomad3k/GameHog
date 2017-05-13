@@ -12,13 +12,18 @@ class Homepage extends React.Component {
   static propTypes = {
   }
   render() {
+    const { identity, players, documents, actions } = this.props;
     return (
       <div className='gh-homepage'>
         <div className='gh-homepage__header'>
-          <PlayerList players={this.props.players} />
+          <PlayerList identity={identity}
+                      players={players} />
         </div>
         <div className='gh-homepage__content'>
-          <DocumentList />
+          <DocumentList documents={documents}
+                        players={players}
+                        actions={actions}
+                        />
         </div>
       </div>
     );
@@ -27,6 +32,7 @@ class Homepage extends React.Component {
 
 function mapStateToProps(state) {
   return {
+    identity: state.identity,
     players: state.players,
     documents: state.documents
   };

@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Navigation, Icon } from 'react-mdl';
 import { Link } from 'react-router-dom';
 
 export default class Nav extends React.Component {
   static propTypes = {
-    header: React.PropTypes.bool
+    header: PropTypes.bool
   }
   static defaultProps = {
     header: false

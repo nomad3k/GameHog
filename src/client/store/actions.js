@@ -7,3 +7,10 @@ export function loadingStart() {
 export function loadingStop() {
   return { type: Types.LOADING_STOP };
 }
+
+export function chatSend(id, message) {
+  return {
+    type: Types.CHAT_SEND,
+    id, message
+  };
+}
