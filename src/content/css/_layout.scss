@@ -1,0 +1,27 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: helvetica neue, helvetica, arial, sans-serif;
+  font-size: 16px;
+}
+
+* {
+  box-sizing: border-box;
+  color: #444444;
+}
+
+.gh-width--full {
+  width: 100%;
+}
+.gh-height--full {
+  height: 100%;
+}
+
+.gh-layout--row {
+  display: flex;
+  flex-direction: row;
+}
+.gh-layout--column {
+  display: flex;
+  flex-direction: column;
+}

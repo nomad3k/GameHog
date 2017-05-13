@@ -1,0 +1,20 @@
+.gh-homepage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+.gh-homepage__header {
+  flex: 0 0 auto;
+}
+.gh-homepage__content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.gh-homepage__content > * {
+  flex: 1 1 auto;
+}

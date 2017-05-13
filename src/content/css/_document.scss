@@ -1,0 +1,56 @@
+.gh-document-list {
+  background-color: hsla(180, 50%, 80%, 1);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.gh-document-list__header {
+  background-color: hsla(180, 50%, 70%, 1);
+  padding-left: 4px;
+  font-size: 22px;
+  height: 24px;
+  flex: 0 0 auto;
+}
+.gh-document-list__header-title {
+  margin: 0;
+  flex: 1 1 auto;
+}
+.gh-document-list__content {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: scroll;
+}
+
+.gh-document-item {
+  background-color: hsla(0, 0%, 100%, 1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 4px;
+  box-shadow: 0px 4px 10px #aaaaaa;
+  border: solid 1px #aaaaaa;
+}
+.gh-document-item__header,
+.gh-document-item__content {
+  overflow: hidden;
+}
+.gh-document-item__header {
+  flex: 0 0 auto;
+  padding: 8px;
+}
+.gh-document-item__header-title {
+  margin: 0;
+  padding: 0;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.gh-document-item__content {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.gh-document-item__content > * {
+  flex: 1 1 auto;
+}

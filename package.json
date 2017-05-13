@@ -8,6 +8,8 @@
   "scripts": {
     "start": "babel-node --harmony src/server.js",
     "clean": "rimraf ./dist",
+    "style": "scss src/content/css/index.scss src/content/css/",
+    "style:watch": "npm run style -- --watch",
     "test": "mocha --compilers js:babel-register --compilers jsx:babel-register src/tests/**/*.test.js --recursive",
     "test:watch": "npm run test -- --watch --growl",
     "dist": "npm run dist:copy & npm run dist:pack",

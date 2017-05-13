@@ -10,6 +10,9 @@ import DocumentList from '../components/document-list';
 
 class Homepage extends React.Component {
   static propTypes = {
+    identity: PropTypes.object,
+    players: PropTypes.object,
+    documents: PropTypes.object
   }
   render() {
     const { identity, players, documents, actions } = this.props;
