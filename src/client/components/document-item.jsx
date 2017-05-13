@@ -37,7 +37,7 @@ export default class DocumentItem extends React.Component {
     return (
       <Document id={id}
                 position={document.window}
-                title={document.type}
+                title={`${document.title} [${document.type}]`}
                 style={style}>
         {this.renderContent(id, document)}
       </Document>
