@@ -12,6 +12,9 @@ module.exports = {
     publicPath: '/bundle',
     filename: 'client.js'
   },
+  externals: {
+    'socket.io': 'io'
+  },
   cache: true,
   devtool: 'eval-source-map',
   resolve: {

@@ -5,6 +5,7 @@ import Koa from 'koa';
 import koaSend from 'koa-send';
 import koaStatic from 'koa-static';
 import koaWebpack from 'koa-webpack';
+import IO from 'koa-socket';
 
 import config from './cfg/config';
 import webpackConfig from './cfg/webpack.config.dev.js';
@@ -12,6 +13,7 @@ import webpackConfig from './cfg/webpack.config.dev.js';
 console.log('Starting...');
 
 const app = new Koa();
+const io = new IO();
 
 const content = koaStatic(path.join(__dirname, 'content'), { });
 
@@ -32,7 +34,17 @@ app.use(async ctx => {
   await koaSend(ctx, 'content/index.html', { root: __dirname });
 });
 
-const server = http.createServer(app.callback());
-server.listen(config.port, () => {
+io.on('echo', (ctx, data) => {
+  ctx.socket.emit('echo', data);
+});
+
+io.attach(app);
+
+io.on('chat', function(ctx, data) {
+  console.log('chat', data);
+  ctx.acknowledge(data);
+});
+
+app.listen(3000, () => {
   console.log(`Running on http://localhost:${config.port}/`);
 });

@@ -1,4 +1,5 @@
 import update from 'react-addons-update';
+import IO from 'socket.io';
 
 import * as Types from './types';
 
@@ -91,6 +92,20 @@ export default function reducer(state = initialState, action) {
       return update(state, {
         loading: { $set: stop(state) }
       });
+
+    case Types.SOCKET_CONNECT:
+      return update(state, {
+        socket: { $set: new IO() }
+      });
+
+    case Types.SOCKET_ON:
+      state.socket.on(action.event, action.handler);
+      return state;
+
+    case Types.SOCKET_EMIT:
+      debugger;
+      state.socket.emit(action.event, action.data, action.callback);
+      return state;
 
     case Types.CHAT_SEND: {
       var message = action.message.trim();

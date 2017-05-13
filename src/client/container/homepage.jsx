@@ -14,6 +14,10 @@ class Homepage extends React.Component {
     players: PropTypes.object,
     documents: PropTypes.object
   }
+  componentDidMount() {
+    const { actions } = this.props;
+    actions.socketConnect();
+  }
   render() {
     const { identity, players, documents, actions } = this.props;
     return (

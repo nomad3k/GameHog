@@ -18,3 +18,7 @@ export const CHAT_SEND            = 'Chat:Send';
 export const MAP                  = 'Map';
 export const MAP_TILE_ADDED       = 'Map:Tile:Added';
 export const MAP_TILE_REMOVED     = 'Map:Tile:Removed';
+
+export const SOCKET_CONNECT       = 'Socket:Connect';
+export const SOCKET_ON            = 'Socket:On';
+export const SOCKET_EMIT          = 'Socket:Emit';
