@@ -28,7 +28,7 @@ export default class Chat extends React.Component {
     e.preventDefault();
     const { id, actions } = this.props;
     const { message } = this.state;
-    actions.chatSend(id, message);
+    actions.send(actions.chatMessage(id, message));
     this.input.select();
   }
   render() {

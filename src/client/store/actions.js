@@ -1,4 +1,14 @@
 import * as Types from './types';
+import IO from 'socket.io';
+
+const socket = new IO();
+
+function attach(dispatch) {
+  socket.on('event', data => {
+    console.log('event', data);
+    dispatch(data);
+  });
+}
 
 export function loadingStart() {
   return { type: Types.LOADING_START };
@@ -9,41 +19,25 @@ export function loadingStop() {
 }
 
 export function socketConnect() {
-  return {
-    type: Types.SOCKET_CONNECT
-  };
-}
-
-export function socketOn(event, handler) {
-  return {
-    type: Types.SOCKET_ON,
-    event,
-    handler
-  };
-}
-
-export function socketEmit(event, data, callback) {
-  return {
-    type: Types.SOCKET_EMIT,
-    event,
-    data,
-    callback
-  };
-}
-
-export function chatSend(id, message) {
   return dispatch => {
+    attach(dispatch);
     dispatch({
-      type: Types.SOCKET_EMIT,
-      event: 'chat',
-      data: { id, message },
-      callback: (data) => {
-        dispatch({
-          type: Types.CHAT_SEND,
-          id: data.id,
-          message: data.message
-        });
-      }
+      type: Types.SOCKET_CONNECT,
+      socket: socket
     });
+  };
+}
+
+export function send(action) {
+  return _dispatch => {
+    socket.emit('event', action);
+  };
+}
+
+export function chatMessage(id, message) {
+  return {
+    type: Types.CHAT_MESSAGE,
+    id: id,
+    message: message
   };
 }

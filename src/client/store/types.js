@@ -13,12 +13,10 @@ export const DOCUMENT_REVEALED    = 'Document:Revealed';
 export const DOCUMENT_LOCKED      = 'Document:Locked';
 
 export const CHAT                 = 'Chat';
-export const CHAT_SEND            = 'Chat:Send';
+export const CHAT_MESSAGE         = 'Chat:Message';
 
 export const MAP                  = 'Map';
 export const MAP_TILE_ADDED       = 'Map:Tile:Added';
 export const MAP_TILE_REMOVED     = 'Map:Tile:Removed';
 
 export const SOCKET_CONNECT       = 'Socket:Connect';
-export const SOCKET_ON            = 'Socket:On';
-export const SOCKET_EMIT          = 'Socket:Emit';

@@ -22,7 +22,6 @@
     "interact-js": "^2.0.1",
     "koa": "^2.2.0",
     "koa-send": "^4.0.0",
-    "koa-socket": "^4.4.0",
     "koa-static": "^3.0.0",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
@@ -35,6 +34,7 @@
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.2.0",
+    "socket.io": "^2.0.1",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
