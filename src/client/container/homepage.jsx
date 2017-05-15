@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 
 import * as Actions from '../store/actions';
 
@@ -14,9 +15,13 @@ class Homepage extends React.Component {
     players: PropTypes.object,
     documents: PropTypes.object
   }
+  static connected = false;
   componentDidMount() {
     const { actions } = this.props;
-    actions.socketConnect();
+    if (!Homepage.connected) {
+      Homepage.connected = true;
+      actions.socketConnect();
+    }
   }
   render() {
     const { identity, players, documents, actions } = this.props;
@@ -25,6 +30,8 @@ class Homepage extends React.Component {
         <div className='gh-homepage__header'>
           <PlayerList identity={identity}
                       players={players} />
+          <Link to='/register'>Register</Link>
+          <Link to='/login'>Login</Link>
         </div>
         <div className='gh-homepage__content'>
           <DocumentList documents={documents}

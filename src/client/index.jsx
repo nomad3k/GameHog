@@ -9,7 +9,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Homepage from './container/homepage';
-import Lipsum from './components/lipsum';
+import LoginPage from './container/login';
+import RegisterPage from './container/register';
 import NotFound from './components/not-found';
 
 import createStore from './store/store';
@@ -21,7 +22,8 @@ ReactDOM.render(
     <Router>
       <Switch>
         <Route exact path='/' component={Homepage} />
-        <Route exact path='/lipsum' component={Lipsum} />
+        <Route exact path='/login' component={LoginPage} />
+        <Route exact path='/register' component={RegisterPage} />
         <Route component={NotFound} />
       </Switch>
     </Router>

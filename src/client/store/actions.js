@@ -2,11 +2,21 @@ import * as Types from './types';
 import IO from 'socket.io';
 
 const socket = new IO();
+let attached = false;
 
 function attach(dispatch) {
+  if (attached) return;
+  attached = true;
   socket.on('event', data => {
+    // eslint-disable-next-line no-console
     console.log('event', data);
     dispatch(data);
+  });
+  socket.on('events', data => {
+    // eslint-disable-next-line no-console
+    console.log('events', data);
+    for(let i=0,ii=data.length;i<ii;i++)
+      dispatch(data[i]);
   });
 }
 
@@ -28,6 +38,41 @@ export function socketConnect() {
   };
 }
 
+export function login({ username, password }, callback) {
+  return dispatch => {
+    socket.emit('login', {
+      username,
+      password
+    }, response => {
+      if (response.ok) {
+        dispatch({
+          type: Types.USER_LOGIN,
+          user: response.user
+        });
+      }
+      callback(response);
+    });
+  };
+}
+
+export function register({ username, password, confirmPassword, playerName, characterName }, callback) {
+  return dispatch => {
+    socket.emit('register', {
+      username,
+      password,
+      confirmPassword,
+      playerName,
+      characterName
+    }, response => {
+      dispatch({
+        type: Types.USER_LOGIN,
+        user: response.user
+      });
+      callback(response);
+    });
+  };
+}
+
 export function send(action) {
   return _dispatch => {
     socket.emit('event', action);
@@ -40,4 +85,34 @@ export function chatMessage(id, message) {
     id: id,
     message: message
   };
+}
+
+export function playerJoined({ username, playerName, characterName }) {
+  return {
+    type: Types.PLAYER_JOINED,
+    username,
+    playerName,
+    characterName
+  };
+}
+
+export function playerQuit(username) {
+  return {
+    type: Types.PLAYER_QUIT,
+    username
+  }
+}
+
+export function playerConnected(username) {
+  return {
+    type: Types.PLAYER_CONNECTED,
+    username
+  };
+}
+
+export function playerDisconnected(username) {
+  return {
+    type: Types.PLAYER_DISCONNECTED,
+    username
+  }
 }

@@ -6,68 +6,10 @@ const initialState = {
   name: 'Gamehog',
   loading: 0,
   identity: {
-    id: 'chris'
   },
   players: {
-    'chris': {
-      name: 'Chris',
-      connected: true
-    },
-    'john': {
-      name: 'John',
-      connected: true
-    },
-    'dave': {
-      name: 'Dave',
-      connected: true
-    },
-    'tracy': {
-      name: 'Tracy',
-      connected: false
-    }
   },
   documents: {
-    'd6de4357-5332-4dc7-8bc1-65e8f2072a0c': {
-      type: 'chat',
-      title: 'Foo',
-      players: ['chris', 'john'],
-      window: {
-        x: 20,
-        y: 20,
-        width: 320,
-        height: 300
-      },
-      data: {
-        nextId: 13,
-        lines: [
-          { id: 1, text: 'Hello @john', who: 'chris', when: new Date() },
-          { id: 2, text: 'Hello @chris', who: 'john', when: new Date() },
-          { id: 3, text: 'Something something', who: 'john', when: new Date() },
-          { id: 4, text: 'Rhubarb rhubarb', who: 'john', when: new Date() },
-          { id: 5, text: 'Hello @john', who: 'chris', when: new Date() },
-          { id: 6, text: 'Hello @chris', who: 'john', when: new Date() },
-          { id: 7, text: 'Something something', who: 'john', when: new Date() },
-          { id: 8, text: 'Rhubarb rhubarb', who: 'john', when: new Date() },
-          { id: 9, text: 'Rhubarb rhubarb', who: 'john', when: new Date() },
-          { id: 10, text: 'Rhubarb rhubarb', who: 'john', when: new Date() },
-          { id: 11, text: 'Rhubarb rhubarb', who: 'john', when: new Date() },
-          { id: 12, text: 'Rhubarb rhubarb', who: 'john', when: new Date() }
-        ]
-      }
-    },
-    'efe52961-eec2-4daf-9d70-97b310bf6613': {
-      type: 'map',
-      title: 'A Map',
-      players: ['chris', 'john', 'dave', 'tracy'],
-      window: {
-        x: 360,
-        y: 20,
-        width: 320,
-        height: 300
-      },
-      data: {
-      }
-    }
   }
 };
 
@@ -92,9 +34,52 @@ export default function reducer(state = initialState, action) {
         loading: { $set: stop(state) }
       });
 
+    case Types.USER_LOGIN:
+      return update(state, {
+        identity: { $set: action.user }
+      });
+
     case Types.SOCKET_CONNECT:
       return update(state, {
         socket: { $set: action.socket }
+      });
+
+    case Types.PLAYER_JOINED:
+      return update(state, {
+        players: {
+          [action.username]: {
+            $set: {
+              username: action.username,
+              playerName: action.playerName,
+              characterName: action.characterName
+            }
+          }
+        }
+      });
+
+    case Types.PLAYER_QUIT:
+      return update(state, {
+        players: {
+          [action.username]: { $set: undefined }
+        }
+      });
+
+    case Types.PLAYER_CONNECTED:
+      return update(state, {
+        players: {
+          [action.username]: {
+            connected: { $set: true }
+          }
+        }
+      });
+
+    case Types.PLAYER_DISCONNECTED:
+      return update(state, {
+        players: {
+          [action.username]: {
+            connected: { $set: false }
+          }
+        }
       });
 
     case Types.CHAT_MESSAGE: {

@@ -35,7 +35,8 @@
     "redux-logger": "^3.0.1",
     "redux-thunk": "^2.2.0",
     "socket.io": "^2.0.1",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "validation-unchained": "0.0.9"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",

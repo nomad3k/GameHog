@@ -17,7 +17,8 @@ export default class PlayerItem extends React.Component {
     return (
       <div className={c}>
         <div className='gh-player-item__header'>
-          <h5>{player.name}</h5>
+          <div className='gh-player-item__header-character'>{player.characterName}</div>
+          <div className='gh-player-item__header-player'>{player.playerName}</div>
         </div>
         <div className='gh-player-item__content'>
         </div>

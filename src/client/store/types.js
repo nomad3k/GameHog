@@ -6,6 +6,8 @@ export const PLAYER_QUIT          = 'Player:Quit';
 export const PLAYER_CONNECTED     = 'Player:Connected';
 export const PLAYER_DISCONNECTED  = 'Player:Disconnected';
 
+export const USER_LOGIN           = 'User:Login';
+
 export const DOCUMENT_ADDED       = 'Document:Added';
 export const DOCUMENT_REMOVED     = 'Document:Removed';
 export const DOCUMENT_HIDDEN      = 'Document:Hidden';

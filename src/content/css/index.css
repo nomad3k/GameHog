@@ -51,11 +51,21 @@ html, body {
 .gh-player-list__header {
   width: 128px;
   height: 64px;
-  text-align: center; }
+  text-align: center;
+  padding: 10px; }
 
 .gh-player-list__header-title {
   margin: 20px 0;
   font-size: 20px; }
+
+.gh-player-item__header-character {
+  color: #666666;
+  font-size: 20px; }
+
+.gh-player-item__header-player {
+  color: #888888;
+  font-size: 14px;
+  font-style: italic; }
 
 .gh-player-list__content {
   display: flex;
@@ -160,5 +170,25 @@ html, body {
 .gh-chat__output-line {
   font-style: italic;
   color: #666666; }
+
+.gh-validation {
+  display: none; }
+
+.gh-validation--fail {
+  color: red;
+  display: inline; }
+
+button, input {
+  font-size: 16px; }
+
+input {
+  margin: 4px;
+  padding: 4px;
+  width: 100%; }
+
+button {
+  border-style: none;
+  border-radius: 4px;
+  padding: 8px; }
 
 /*# sourceMappingURL=index.css.map */

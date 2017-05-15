@@ -8,10 +8,20 @@
   width: 128px;
   height: 64px;
   text-align: center;
+  padding: 10px;
 }
 .gh-player-list__header-title {
   margin: 20px 0;
   font-size: 20px;
+}
+.gh-player-item__header-character {
+  color: #666666;
+  font-size: 20px;
+}
+.gh-player-item__header-player {
+  color: #888888;
+  font-size: 14px;
+  font-style: italic;
 }
 .gh-player-list__content {
   display: flex;
