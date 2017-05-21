@@ -8,4 +8,11 @@ export default class User {
   matchPassword(password) {
     return this.password = password;
   }
+  data() {
+    return {
+      username: this.username,
+      playerName: this.playerName,
+      characterName: this.characterName
+    };
+  }
 }

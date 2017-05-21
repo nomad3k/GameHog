@@ -10,6 +10,7 @@ import ReactDOM from 'react-dom';
 
 import Homepage from './container/homepage';
 import LoginPage from './container/login';
+import LogoutPage from './container/logout';
 import RegisterPage from './container/register';
 import NotFound from './components/not-found';
 
@@ -23,6 +24,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path='/' component={Homepage} />
         <Route exact path='/login' component={LoginPage} />
+        <Route exact path='/logout' component={LogoutPage} />
         <Route exact path='/register' component={RegisterPage} />
         <Route component={NotFound} />
       </Switch>

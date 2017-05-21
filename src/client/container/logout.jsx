@@ -6,21 +6,16 @@ import { Link } from 'react-router-dom';
 
 import * as Actions from '../store/actions';
 
-class LoginPage extends React.Component {
+class LogoutPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
-      password: '',
       errors: { }
     }
   }
   onSubmit(e) {
     e.preventDefault();
-    this.props.actions.login({
-      username: this.state.username,
-      password: this.state.password
-    }, response => {
+    this.props.actions.logout(response => {
       if (response.ok) {
         alert('Success');
       } else {
@@ -33,27 +28,10 @@ class LoginPage extends React.Component {
       <div className='gh-login'>
         <form onSubmit={this.onSubmit.bind(this)}>
           <div>
-            <input type='text'
-                   placeholder='Username'
-                   value={this.state.username}
-                   onChange={e => this.setState({ username: e.target.value })}
-                   autoFocus
-                   required />
-            <span className='gh-validation--fail'>{this.state.errors.username}</span>
-          </div>
-          <div>
-            <input type='password'
-                   placeholder='Password'
-                   value={this.state.password}
-                   onChange={e => this.setState({ password: e.target.value })}
-                   required />
-            <span className='gh-validation--fail'>{this.state.errors.password}</span>
-          </div>
-          <div>
-            <button type='submit'>Login</button>
+            <button type='submit'>Logout</button>
             <div className='gh-menu'>
               <Link to='/register'>Register</Link>
-              <Link to='/logout'>Logout</Link>
+              <Link to='/login'>Login</Link>
               <Link to='/'>Home</Link>
             </div>
           </div>
@@ -77,4 +55,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(LoginPage);
+)(LogoutPage);

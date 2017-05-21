@@ -10,7 +10,8 @@ import validate from 'validation-unchained';
 
 import config from './cfg/config';
 import webpackConfig from './cfg/webpack.config.dev.js';
-import { playerJoined, playerQuit, playerConnected, playerDisconnected } from './client/store/actions';
+import createStore from './client/store/store';
+import * as Actions from './client/store/actions';
 
 import User from './user';
 
@@ -40,10 +41,21 @@ app.use(async ctx => {
 const server = http.createServer(app.callback());
 const io = SocketIO(server);
 
+const store = createStore();
 let users = { };
 
 io.on('connection', function(client) {
-  console.log('connected');
+  console.log(`client connected: ${client.id}`);
+
+  client.emit('players', store.getState().players);
+  client.emit('documents', store.getState().documents);
+
+  // ---------------------------------------------------------------------------
+
+  function process(event) {
+    store.dispatch(event);
+    io.sockets.emit('event', event);
+  }
 
   // ---------------------------------------------------------------------------
 
@@ -51,13 +63,16 @@ io.on('connection', function(client) {
     console.log('disconnected');
     if (client.user) {
       client.user.connected = false;
-      client.broadcast.emit('event', playerConnected(client.user.username));
+      process(Actions.playerDisconnected(client.user.username));
     }
   });
 
   // ---------------------------------------------------------------------------
 
   client.on('login', function(args, callback) {
+    if (client.user) {
+      return callback({ ok:false, errors: { username: ['Already logged in.'] } });
+    }
     const { errors, data } = validate(args, {
       strict: true,
       rules: {
@@ -74,12 +89,20 @@ io.on('connection', function(client) {
     }
     client.user = user;
     user.connected = true;
-    io.sockets.emit('event', playerConnected(user.username));
-    callback({
-      ok: true,
-      message: 'Success',
-      user: user
-    });
+    callback({ ok: true, message: 'Success', user: user.data() });
+    process(Actions.playerConnected(user.username));
+  });
+
+  // ---------------------------------------------------------------------------
+
+  client.on('logout', function(callback) {
+    if (!client.user) {
+      return callback({ ok:false, errors: { username: ['Not logged in.'] } });
+    }
+    const username = client.user.username;
+    delete client.user;
+    callback({ ok: true, message: 'Success' });
+    process(Actions.playerDisconnected(username));
   });
 
   // ---------------------------------------------------------------------------
@@ -102,22 +125,22 @@ io.on('connection', function(client) {
                         data.password,
                         data.playerName,
                         data.characterName);
-    io.sockets.emit('event', playerJoined({
+    users[data.username] = user;
+    callback({ ok: true, message: 'Success', user: user.data() });
+    process(Actions.playerJoined({
       username: data.username,
       playerName: data.playerName,
       characterName: data.characterName
     }));
-    users[data.username] = user;
-    callback({ ok: true, message: 'Success' });
   });
 
   // ---------------------------------------------------------------------------
 
   client.on('event', function(data) {
     console.log('event', data);
-    // client.emit('event', data);
-    client.broadcast.emit('event', data);
+    process(data);
   });
+
 });
 
 server.listen(config.port, () => {

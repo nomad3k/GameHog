@@ -39,9 +39,24 @@ export default function reducer(state = initialState, action) {
         identity: { $set: action.user }
       });
 
+    case Types.USER_LOGOUT:
+      return update(state, {
+        identity: { $set: { } }
+      });
+
     case Types.SOCKET_CONNECT:
       return update(state, {
         socket: { $set: action.socket }
+      });
+
+    case Types.PLAYER_SET:
+      return update(state, {
+        players: { $set: action.data }
+      });
+
+    case Types.DOCUMENT_SET:
+      return update(state, {
+        documents: { $set: action.data }
       });
 
     case Types.PLAYER_JOINED:

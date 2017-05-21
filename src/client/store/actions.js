@@ -18,6 +18,20 @@ function attach(dispatch) {
     for(let i=0,ii=data.length;i<ii;i++)
       dispatch(data[i]);
   });
+  socket.on('players', data => {
+    console.log('players', data);
+    dispatch({
+      type: Types.PLAYER_SET,
+      data
+    });
+  });
+  socket.on('documents', data => {
+    console.log('documents', data);
+    dispatch({
+      type: Types.DOCUMENT_SET,
+      data
+    })
+  });
 }
 
 export function loadingStart() {
@@ -52,6 +66,18 @@ export function login({ username, password }, callback) {
       }
       callback(response);
     });
+  };
+}
+
+export function logout() {
+  return dispatch => {
+    socket.emit('logout', response => {
+      if (response.ok) {
+        dispatch({
+          type: Types.USER_LOGOUT
+        });
+      }
+    })
   };
 }
 

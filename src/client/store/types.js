@@ -1,13 +1,16 @@
 export const LOADING_START  = 'Loading:Start';
 export const LOADING_STOP   = 'Loading:Stop';
 
+export const PLAYER_SET           = 'Player:Set';
 export const PLAYER_JOINED        = 'Player:Joined';
 export const PLAYER_QUIT          = 'Player:Quit';
 export const PLAYER_CONNECTED     = 'Player:Connected';
 export const PLAYER_DISCONNECTED  = 'Player:Disconnected';
 
 export const USER_LOGIN           = 'User:Login';
+export const USER_LOGOUT          = 'User:Logout';
 
+export const DOCUMENT_SET         = 'Document:Set';
 export const DOCUMENT_ADDED       = 'Document:Added';
 export const DOCUMENT_REMOVED     = 'Document:Removed';
 export const DOCUMENT_HIDDEN      = 'Document:Hidden';

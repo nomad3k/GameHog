@@ -80,8 +80,11 @@ class RegisterPage extends React.Component {
           </div>
           <div>
             <button type='submit'>Register</button>
-            <Link to='/login'>Login</Link>
-            <Link to='/'>Home</Link>
+            <div className='gh-menu'>
+              <Link to='/login'>Login</Link>
+              <Link to='/logout'>Logout</Link>
+              <Link to='/'>Home</Link>
+            </div>
           </div>
         </form>
       </div>

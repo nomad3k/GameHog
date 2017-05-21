@@ -30,8 +30,11 @@ class Homepage extends React.Component {
         <div className='gh-homepage__header'>
           <PlayerList identity={identity}
                       players={players} />
-          <Link to='/register'>Register</Link>
-          <Link to='/login'>Login</Link>
+          <div className='gh-menu'>
+            <Link to='/register'>Register</Link>
+            <Link to='/login'>Login</Link>
+            <Link to='/logout'>Logout</Link>
+          </div>
         </div>
         <div className='gh-homepage__content'>
           <DocumentList documents={documents}
