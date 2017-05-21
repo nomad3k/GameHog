@@ -22,6 +22,7 @@ module.exports = {
     "sourceType": "module"
   },
   "rules": {
+    "no-var": "error",
     "comma-dangle": "error",
     "quotes": [ "warn", "single" ],
     "no-undef": "error",

@@ -19,6 +19,7 @@
   "dependencies": {
     "bower-webpack-plugin": "^0.1.9",
     "classnames": "^2.2.5",
+    "immutable": "^3.8.1",
     "interact-js": "^2.0.1",
     "koa": "^2.2.0",
     "koa-send": "^4.0.0",
