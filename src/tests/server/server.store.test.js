@@ -25,7 +25,8 @@ describe('Server Store', function() {
 
         const expected = {
           type: Types.CLIENT_CONNECTED,
-          client: 'foo'
+          client: 'foo',
+          socket: undefined
         };
         expect(action.type).to.not.be.undefined;
         expect(action).to.deep.equal(expected);
@@ -37,7 +38,12 @@ describe('Server Store', function() {
         store.dispatch(Actions.clientConnected({ client: 'bah' }));
 
         const expected = {
-          clients: { bah: { subscriptions: [ ] } },
+          clients: {
+            bah: {
+              socket: undefined,
+              subscriptions: [ ]
+            }
+          },
           topics: { }
         };
         expect(store.getState().toJS()).to.deep.equal(expected);
@@ -51,8 +57,8 @@ describe('Server Store', function() {
 
         const expected = {
           clients: {
-            bah: { subscriptions: [ ] },
-            foo: { subscriptions: [ ] }
+            bah: { socket: undefined, subscriptions: [ ] },
+            foo: { socket: undefined, subscriptions: [ ] }
           },
           topics: { }
         };
@@ -89,8 +95,14 @@ describe('Server Store', function() {
 
         const expected = {
           clients: {
-            foo: { subscriptions: [ ] },
-            meep: { subscriptions: [ ] }
+            foo: {
+              socket: undefined,
+              subscriptions: [ ]
+            },
+            meep: {
+              socket: undefined,
+              subscriptions: [ ]
+            }
           },
           topics: { }
         };
@@ -117,7 +129,10 @@ describe('Server Store', function() {
 
         const expected = {
           clients: {
-            bah: { subscriptions: [ 'x', 'y', 'z' ] }
+            bah: {
+              socket: undefined,
+              subscriptions: [ 'x', 'y', 'z' ]
+            }
           },
           topics: {
             'x': { subscribers: ['bah'] },
@@ -214,6 +229,7 @@ describe('Server Store', function() {
         const expected = {
           clients: {
             'foo': {
+              socket: undefined,
               subscriptions: [ 'x', 'z' ]
             }
           },
@@ -252,7 +268,10 @@ describe('Server Store', function() {
 
         const expected = {
           clients: {
-            'xxx': { subscriptions: ['aaa'] }
+            'xxx': {
+              socket: undefined,
+              subscriptions: ['aaa']
+            }
           },
           topics: {
             'aaa': { subscribers: ['xxx'] }

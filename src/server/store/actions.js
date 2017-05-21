@@ -1,10 +1,11 @@
 import * as Types from './types';
 
-export function clientConnected({ client }) {
+export function clientConnected({ client, socket }) {
   if (!client) throw new Error('Argument Expected: client');
   return {
     type: Types.CLIENT_CONNECTED,
-    client
+    client,
+    socket
   };
 }
 

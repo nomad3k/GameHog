@@ -14,7 +14,7 @@ export function connect(store) {
       const msg = { id: client.id, message: 'Connected' };
       client.emit(Events.CLIENT_CONNECTED, msg);
       client.broadcast.emit(Events.CLIENT_CONNECTED, msg);
-      store.dispatch(Actions.clientConnected({ client: client.id }));
+      store.dispatch(Actions.clientConnected({ client: client.id, socket: client }));
     })();
 
     // -------------------------------------------------------------------------

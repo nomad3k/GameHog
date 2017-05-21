@@ -64,7 +64,8 @@ describe('Server-side Client Handlers', function() {
     });
 
     it('mutated state', function() {
-      expect(store.actions).to.deep.equal([{
+      const actual = store.actions.map(({ client, type }) => ({ client, type }));
+      expect(actual).to.deep.equal([{
         type: Types.CLIENT_CONNECTED,
         client: subject.id
       }]);

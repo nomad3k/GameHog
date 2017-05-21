@@ -1,4 +1,4 @@
-import { fromJS } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 
 import * as Types from './types';
 
@@ -12,8 +12,11 @@ export default function reducer(state = initialState, action) {
 
     case Types.CLIENT_CONNECTED: {
       return state.setIn(
-        ['clients', action.client],
-        fromJS({ subscriptions: [] })
+        ['clients', action.client ],
+        Map({
+          socket: action.socket,
+          subscriptions: List([ ])
+        })
       );
     }
 
