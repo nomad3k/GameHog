@@ -159,11 +159,10 @@ describe('Server Store', function() {
     describe('Open', function() {
 
       it('should build action', function() {
-        const action = Actions.topicOpened({ topic: 'xxx' });
-        const expected = {
-          type: Types.TOPIC_OPEN,
-          topic: 'xxx'
-        };
+        function handler() { }
+        const topic = 'xxx';
+        const action = Actions.topicOpened({ topic, handler });
+        const expected = { type: Types.TOPIC_OPEN, topic, handler };
         expect(action.type).to.not.be.undefined;
         expect(action).to.deep.equal(expected);
       });
@@ -274,7 +273,9 @@ describe('Server Store', function() {
             }
           },
           topics: {
-            'aaa': { subscribers: ['xxx'] }
+            'aaa': {
+              subscribers: ['xxx']
+            }
           }
         };
         expect(store.getState().toJS()).to.deep.equal(expected);

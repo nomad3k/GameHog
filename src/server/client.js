@@ -2,7 +2,7 @@ import validate from 'validation-unchained';
 
 import * as Actions from './store/actions';
 import * as Events from '../shared/events';
-import { ok, badRequest, invalidRequest } from './responses';
+import { ok, badRequest, invalidRequest, invalidOperation } from './responses';
 
 export function connect(store) {
   return function(client) {
@@ -14,7 +14,10 @@ export function connect(store) {
       const msg = { id: client.id, message: 'Connected' };
       client.emit(Events.CLIENT_CONNECTED, msg);
       client.broadcast.emit(Events.CLIENT_CONNECTED, msg);
-      store.dispatch(Actions.clientConnected({ client: client.id, socket: client }));
+      store.dispatch(Actions.clientConnected({
+        client: client.id,
+        socket: client
+      }));
     })();
 
     // -------------------------------------------------------------------------
@@ -80,6 +83,19 @@ export function connect(store) {
       }));
 
       callback(ok());
+    });
+
+    client.on(Events.PUBLISH, function(id, data, callback) {
+      // Is there a topic?
+      const topic = store.getState().topics[id];
+      if (!topic) return callback(invalidRequest({ id: ['Unknown Topic Id'] }));
+      // Does the topic have a handler?
+      const handler = topic.get('handler');
+      if (!handler) return callback(invalidOperation({ id: ['Invalid Topic'] }));
+      // Pass off to the handler
+      handler({ id, data, store }, function() {
+        callback(ok());
+      });
     });
 
     // -------------------------------------------------------------------------

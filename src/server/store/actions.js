@@ -17,11 +17,12 @@ export function clientDisconnected({ client }) {
   };
 }
 
-export function topicOpened({ topic }) {
+export function topicOpened({ topic, handler }) {
   if (!topic) throw new Error('Argument Expected: topic');
   return {
     type: Types.TOPIC_OPEN,
-    topic
+    topic,
+    handler
   };
 }
 

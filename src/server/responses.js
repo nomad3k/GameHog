@@ -25,3 +25,12 @@ export function invalidRequest(errors) {
     errors
   };
 }
+
+export function invalidOperation(errors) {
+  return {
+    ok: false,
+    code: ResponseCode.INVALID_OPERATION,
+    message: 'Invalid Operation',
+    errors
+  };
+}

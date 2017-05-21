@@ -7,3 +7,4 @@ export const ECHO         = 'System:Echo';
 export const SUBSCRIBE    = 'Topic:Subscribe';
 export const UNSUBSCRIBE  = 'Topic:Unsubscribe';
 export const REPLAY       = 'Topic:Replay';
+export const PUBLISH      = 'Topic:Publish';
