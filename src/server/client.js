@@ -10,16 +10,30 @@ export function connect(store) {
     // CONNECT
     // -------------------------------------------------------------------------
 
-    client.emit(Events.SYSTEM, `connected: ${client.id}`);
-    store.dispatch(Actions.clientConnected({ client: client.id }));
+    (function(){
+      const msg = { id: client.id, message: 'Connected' };
+      client.emit(Events.CLIENT_CONNECTED, msg);
+      client.broadcast.emit(Events.CLIENT_CONNECTED, msg);
+      store.dispatch(Actions.clientConnected({ client: client.id }));
+    })();
 
     // -------------------------------------------------------------------------
     // DISCONNECT
     // -------------------------------------------------------------------------
 
-    client.on(Events.DISCONNECT, function() {
-      client.emit('SYSTEM', `disconnected: ${client.id}`);
+    client.on('disconnect', function() {
+      const msg = { id: client.id, message: 'Disconnected' };
+      client.broadcast.emit(Events.CLIENT_DISCONNECTED, msg);
       store.dispatch(Actions.clientDisconnected({ client: client.id }));
+    });
+
+    // -------------------------------------------------------------------------
+    // ECHO
+    // -------------------------------------------------------------------------
+
+    client.on(Events.ECHO, function(data, callback) {
+      client.emit(Events.ECHO, data);
+      callback(data);
     });
 
     // -------------------------------------------------------------------------

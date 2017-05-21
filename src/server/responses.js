@@ -1,4 +1,4 @@
-import * as ResponseCode from '../shared/response-codes';
+import * as ResponseCode from '../shared/response-code';
 
 export function ok() {
   return {

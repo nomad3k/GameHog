@@ -27,7 +27,7 @@ describe('Server Store', function() {
           type: Types.CLIENT_CONNECTED,
           client: 'foo'
         };
-        expect(action.type).to.be.defined;
+        expect(action.type).to.not.be.undefined;
         expect(action).to.deep.equal(expected);
       });
 
@@ -73,7 +73,7 @@ describe('Server Store', function() {
           type: Types.CLIENT_DISCONNECTED,
           client: 'meep'
         };
-        expect(action.type).to.be.defined;
+        expect(action.type).to.not.be.undefined;
         expect(action).to.deep.equal(expected)
       })
 
@@ -149,7 +149,7 @@ describe('Server Store', function() {
           type: Types.TOPIC_OPEN,
           topic: 'xxx'
         };
-        expect(action.type).to.be.defined;
+        expect(action.type).to.not.be.undefined;
         expect(action).to.deep.equal(expected);
       });
 
@@ -180,7 +180,7 @@ describe('Server Store', function() {
           type: Types.TOPIC_CLOSE,
           topic: 'yyy'
         };
-        expect(action.type).to.be.defined;
+        expect(action.type).to.not.be.undefined;
         expect(action).to.deep.equal(expected);
       });
 
