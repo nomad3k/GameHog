@@ -11,6 +11,7 @@ import config from './cfg/config';
 import webpackConfig from './cfg/webpack.config.dev.js';
 import createStore from './client/store/store';
 import client from './server/client';
+import repository from './server/repository';
 
 console.log('Starting...');
 
@@ -40,7 +41,7 @@ const io = SocketIO(server);
 
 const store = createStore();
 
-io.on('connection', client.connect(store));
+io.on('connection', client.connect(store, repository));
 
 server.listen(config.port, () => {
   console.log(`Running on http://localhost:${config.port}/`);
