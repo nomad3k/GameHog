@@ -10,57 +10,6 @@ describe('Gamehog', function() {
 
   describe('Server', function() {
 
-    describe('Connection', function() {
-      const client = new MockClient();
-      const store = new MockStore();
-      const connection = connect(store);
-      connection(client);
-
-      it('should acknowledge the subject', function() {
-        const events = client.events.filter(x => x.eventName === Events.SYSTEM);
-        expect(events).to.have.length(1);
-      });
-      it('should inform observers', function() {
-        const events = client.broadcast.events.filter(x => x.eventName == Events.CLIENT_CONNECTED);
-        expect(events).to.have.length(1);
-        expect(events[0].args).to.deep.equal({
-          id: client.id,
-          message: 'Connected'
-        });
-      });
-      it('should amend the state', function() {
-        const state = store.getState();
-        const player = state.getIn([State.PLAYERS, client.id]);
-        expect(player).to.not.be.undefined;
-        expect(player.toJS()).to.deep.equal({ });
-      });
-    });
-
-    describe('Disconnection', function() {
-      const client = new MockClient();
-      const store = new MockStore();
-      const connection = connect(store);
-      connection(client);
-      client.clear();
-      store.clear();
-
-      client.trigger(Events.DISCONNECT);
-
-      it('should inform observers', function() {
-        const events = client.broadcast.events.filter(x => x.eventName == Events.CLIENT_DISCONNECTED);
-        expect(events).to.have.length(1);
-        expect(events[0].args).to.deep.equal({
-          id: client.id,
-          message: 'Disconnected'
-        });
-      });
-      it('should amend the state', function() {
-        const state = store.getState();
-        const players = state.get(State.PLAYERS).toJS();
-        expect(players).to.deep.equal({ });
-      });
-    });
-
     // describe('Authentication', function() {
     //
     //   describe('Register', function() {

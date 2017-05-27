@@ -1,12 +1,12 @@
 /* eslint-disable no-unused-vars */
 
-// import validate from 'validation-unchained';
+import validate from 'validation-unchained';
 // import uuid from 'uuid/v4';
 
 // import * as Types from './store/types';
 import * as Actions from '../shared/store/actions';
 import * as Events from '../shared/events';
-import { authRequired, anonRequired } from './responses';
+import { ok, authRequired, anonRequired, notImplemented } from './responses';
 
 export function connect(store) {
   return function(client) {
@@ -51,7 +51,18 @@ export function connect(store) {
     // Authentication
     // ------------------------------------------------------------------------
 
-    client.on_anon('auth:register', function(args, callback) {
+    client.on_anon(Events.AUTH_REGISTER, function({ userName, password, playerName, characterName }, callback) {
+      const pr = Actions.playerRegistered({
+        userName, playerName, characterName
+      });
+      const ur = Actions.userRegistered({
+        userName, password
+      });
+      store.dispatch(ur);
+      store.dispatch(pr);
+      client.emit(Events.Event, pr);
+      client.broadcast.emit(Events.Event, pr);
+      callback(ok());
     });
 
     client.on_auth('auth:unregister', function(args, callback) {

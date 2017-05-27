@@ -34,3 +34,10 @@ export function invalidOperation(errors) {
     errors
   };
 }
+
+export function notImplemented() {
+  return {
+    ok: false,
+    code: ResponseCode.NOT_IMPLEMENTED
+  };
+}

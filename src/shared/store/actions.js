@@ -1,7 +1,9 @@
 import * as Types from './types';
 
-function ArgumentRequiredError(title) {
-  this.title = title;
+class ArgumentRequiredError extends Error {
+  constructor(message) {
+    super(`Argument Requred: ${message}`);
+  }
 }
 
 export function clientConnected(client) {
@@ -17,5 +19,24 @@ export function clientDisconnected(client) {
   return {
     type: Types.CLIENT_DISCONNECTED,
     id: client.id
+  };
+}
+
+export function userRegistered({ userName, password }) {
+  if (!userName) throw new ArgumentRequiredError('userName');
+  if (!password) throw new ArgumentRequiredError('password');
+  return {
+    type: Types.USER_REGISTERED,
+    userName, password
+  };
+}
+
+export function playerRegistered({ userName, playerName, characterName }) {
+  if (!userName) throw new ArgumentRequiredError('userName');
+  if (!playerName) throw new ArgumentRequiredError('playerName');
+  if (!characterName) throw new ArgumentRequiredError('characterName');
+  return {
+    type: Types.PLAYER_REGISTERED,
+    userName, playerName, characterName
   };
 }

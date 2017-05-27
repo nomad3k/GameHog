@@ -5,3 +5,7 @@ export const DISCONNECT           = 'disconnect';
 export const SYSTEM               = 'System';
 export const CLIENT_CONNECTED     = 'Client:Connected';
 export const CLIENT_DISCONNECTED  = 'Client:Disconnected';
+
+export const EVENT                = 'Event';
+
+export const AUTH_REGISTER        = 'Auth:Register';

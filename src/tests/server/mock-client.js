@@ -24,8 +24,14 @@ export default class MockClient {
   trigger(eventName, args, callback) {
     const handler = this.handlers[eventName];
     if (!handler) {
-      throw new Error('Unknown Handler: ' + eventName);
+      throw new Error(`Unknown Handler: ${eventName}`);
     }
     handler(args, callback);
+  }
+  getArgsForSingleEvent(eventName) {
+    const events = this.events.filter(x => x.eventName === eventName);
+    if (events.length == 0) throw new Error('No matching events found');
+    if (events.length >= 2) throw new Error('Multiple matching events found');
+    return events[0].args;
   }
 }
