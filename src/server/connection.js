@@ -6,7 +6,7 @@ import validate from 'validation-unchained';
 // import * as Types from './store/types';
 import * as Actions from '../shared/store/actions';
 import * as Events from '../shared/events';
-import { ok, authRequired, anonRequired, notImplemented } from './responses';
+import { ok, badRequest, authRequired, anonRequired, notImplemented } from './responses';
 
 export function connect(store) {
   return function(client) {
@@ -51,7 +51,19 @@ export function connect(store) {
     // Authentication
     // ------------------------------------------------------------------------
 
-    client.on_anon(Events.AUTH_REGISTER, function({ userName, password, playerName, characterName }, callback) {
+    client.on_anon(Events.AUTH_REGISTER, function(args, callback) {
+      const { errors, data } = validate(args, {
+        strict: true,
+        rules: {
+          userName: { type: String, required: true },
+          password: { type: String, required: true, length: { min: 6, max: 255 } },
+          playerName: { type: String, required: true },
+          characterName: { type: String, required: true }
+        }
+      });
+      if (errors) return callback(badRequest(errors));
+
+      const { userName, password, playerName, characterName } = data;
       const pr = Actions.playerRegistered({
         userName, playerName, characterName
       });

@@ -4,6 +4,7 @@ import * as Types from '../../shared/store/types';
 import * as State from '../../shared/store/state';
 import { connect } from '../../server/connection';
 import * as Events from '../../shared/events';
+import * as ResponseCodes from '../../shared/response-code';
 import MockClient from './mock-client';
 import MockStore from './mock-store';
 
@@ -68,24 +69,32 @@ describe('Client:Authentication', function() {
     });
   });
 
-  // describe('Register - Fail: Bad Request', function() {
-  //   const client = new MockClient();
-  //   const store = new MockStore();
-  //   const connection = connect(store);
-  //   connection(client);
-  //   store.clear();
-  //   client.clear();
-  //
-  //   before(function(done) {
-  //     client.trigger(Events.AUTH_REGISTER, { }, response => {
-  //       done();
-  //     });
-  //   });
-  //
-  //   it('should inform the subject', function() {
-  //
-  //   });
-  // });
+  describe('Register - Fail: Bad Request', function() {
+    const client = new MockClient();
+    const store = new MockStore();
+    const connection = connect(store);
+    connection(client);
+    store.clear();
+    client.clear();
+    let response = null;
+
+    before(function(done) {
+      client.trigger(Events.AUTH_REGISTER, { }, r => {
+        response = r;
+        done();
+      });
+    });
+
+    it('should inform the subject', function() {
+      expect(response.ok).to.be.false;
+      expect(response.code).to.equal(ResponseCodes.BAD_REQUEST);
+      expect(response.errors.userName).to.not.be.undefined;
+      expect(response.errors.password).to.not.be.undefined;
+      expect(response.errors.playerName).to.not.be.undefined;
+      expect(response.errors.characterName).to.not.be.undefined;
+    });
+  });
+
   // describe('Register - Fail: Already Registered', function() {
   //   const client = new MockClient();
   //   const store = new MockStore();
