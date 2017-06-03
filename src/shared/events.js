@@ -9,3 +9,4 @@ export const CLIENT_DISCONNECTED  = 'Client:Disconnected';
 export const EVENT                = 'Event';
 
 export const AUTH_REGISTER        = 'Auth:Register';
+export const AUTH_LOGIN           = 'Auth:Login';

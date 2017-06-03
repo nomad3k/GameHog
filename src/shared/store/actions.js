@@ -40,3 +40,11 @@ export function playerRegistered({ userName, playerName, characterName }) {
     userName, playerName, characterName
   };
 }
+
+export function playerConnected({ userName }) {
+  if (!userName) throw new ArgumentRequiredError('userName');
+  return {
+    type: Types.PLAYER_CONNECTED,
+    userName
+  }
+}

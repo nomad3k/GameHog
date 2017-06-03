@@ -1,5 +1,7 @@
+import 'babel-polyfill'; // Required for generators to work.
 import { expect } from 'chai';
 
+import * as Actions from '../../shared/store/actions';
 import * as Types from '../../shared/store/types';
 import * as State from '../../shared/store/state';
 import { connect } from '../../server/connection';
@@ -8,15 +10,27 @@ import * as ResponseCodes from '../../shared/response-code';
 import MockClient from './mock-client';
 import MockStore from './mock-store';
 
+function setup(initialiser) {
+  const client = new MockClient();
+  const store = new MockStore();
+  const connection = connect(store);
+  connection(client);
+  if (initialiser) {
+    for (let action of initialiser()) {
+      store.dispatch(action);
+    }
+  }
+  store.clear();
+  client.clear();
+  return { client, store };
+}
+
 describe('Client:Authentication', function() {
 
   describe('Register - Success', function() {
-    const client = new MockClient();
-    const store = new MockStore();
-    const connection = connect(store);
-    connection(client);
-    let response = null;
+    const { client, store } = setup();
 
+    let response = null;
     before(function(done) {
       const request = {
         userName: 'u',
@@ -33,6 +47,7 @@ describe('Client:Authentication', function() {
     it('should register handlers', function() {
       expect(client.handlers[Events.AUTH_REGISTER]).to.not.be.undefined;
     });
+
     it('should acknowledge the subject', function() {
       expect(response.ok).to.be.true;
       const args = client.getArgsForSingleEvent(Events.PLAYER_REGISTERED);
@@ -43,6 +58,7 @@ describe('Client:Authentication', function() {
         characterName: 'c'
       });
     });
+
     it('should inform observers', function() {
       const args = client.broadcast.getArgsForSingleEvent(Events.PLAYER_REGISTERED);
       expect(args).to.deep.equal({
@@ -52,6 +68,7 @@ describe('Client:Authentication', function() {
         characterName: 'c'
       });
     });
+
     it('should amend the state', function() {
       const users = store.getState().get(State.USERS).toJS();
       const players = store.getState().get(State.PLAYERS).toJS();
@@ -70,14 +87,9 @@ describe('Client:Authentication', function() {
   });
 
   describe('Register - Fail: Bad Request', function() {
-    const client = new MockClient();
-    const store = new MockStore();
-    const connection = connect(store);
-    connection(client);
-    store.clear();
-    client.clear();
-    let response = null;
+    const { client } = setup();
 
+    let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_REGISTER, { }, r => {
         response = r;
@@ -95,31 +107,154 @@ describe('Client:Authentication', function() {
     });
   });
 
-  // describe('Register - Fail: Already Registered', function() {
-  //   const client = new MockClient();
-  //   const store = new MockStore();
-  //   const connection = connect(store);
-  //   connection(client);
-  //
-  //   it('should inform the subject', function() {});
-  // });
+  describe('Register - Fail: Already Registered', function() {
+    const userName = 'foo';
+    const { client } = setup(function* () {
+      yield Actions.userRegistered({ userName, password: 'bah' });
+      yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
+    });
 
-  // describe('Unregister', function() {
+    let response = null;
+    before(function(done) {
+      const params = {
+        userName,
+        password: 'xxx',
+        playerName: 'P',
+        characterName: 'C'
+      };
+      client.trigger(Events.AUTH_REGISTER, params, r => {
+        response = r;
+        done();
+      });
+    });
+
+    it('should inform the subject', function() {
+      expect(response).to.not.be.undefined;
+      expect(response.ok).to.be.false;
+      expect(response.code).to.equal(ResponseCodes.INVALID_OPERATION);
+      expect(response.message).to.not.be.undefined;
+      expect(response.errors.userName).to.not.be.undefined;
+    });
+  });
+
+  describe('Login - Success', function() {
+    const { client } = setup(function* () {
+      yield Actions.userRegistered({ userName: 'foo', password: 'bah' });
+      yield Actions.playerRegistered({ userName: 'foo', playerName: 'Foo', characterName: 'Foo' });
+    });
+
+    let response = null;
+    before(function(done) {
+      const params = {
+        userName: 'foo',
+        password: 'bah'
+      };
+      client.trigger(Events.AUTH_LOGIN, params, r => {
+        response = r;
+        done();
+      });
+    });
+
+    it('should inform subject', function() {
+      expect(response).to.not.be.undefined;
+      expect(response.ok).to.be.true;
+      expect(response.code).to.equal(ResponseCodes.OK);
+    });
+
+    it('should inform observers', function() {
+      const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
+      expect(args).to.deep.equal({
+        type: Types.PLAYER_CONNECTED,
+        userName: 'foo'
+      });
+    });
+
+    it('should emit players to subject', function() {
+      const args = client.getArgsForSingleEvent(Events.EVENT);
+      expect(args).to.deep.equal({
+        type: Types.PLAYER_CONNECTED,
+        userName: 'foo'
+      });
+    });
+
+    it('should emit documents to subject', function() {
+    });
+  });
+
+  describe('Login - Fail: Bad Request', function() {
+    const { client } = setup(function* () {
+      yield Actions.userRegistered({ userName: 'foo', password: 'bah' });
+      yield Actions.playerRegistered({ userName: 'foo', playerName: 'Foo', characterName: 'Foo' });
+    });
+
+    let response;
+    before(function(done) {
+      const params = { };
+      client.trigger(Events.AUTH_LOGIN, params, r => {
+        response = r;
+        done();
+      });
+    });
+
+    it('should inform the subject', function() {
+      expect(response).to.exist;
+      expect(response.ok).to.be.false;
+      expect(response.code).to.equal(ResponseCodes.BAD_REQUEST);
+    });
+  });
+
+  describe('Login - Fail: Unknown user', function() {
+    const { client } = setup();
+
+    let response = null;
+    before(function(done) {
+      client.trigger(Events.AUTH_LOGIN, {
+        userName: 'unknown',
+        password: 'irrelevant'
+      }, r => {
+        response = r;
+        done();
+      });
+    });
+
+    it('should inform the subject', function() {
+      expect(response).to.exist;
+      expect(response.ok).to.be.false;
+      expect(response.code).to.equal(ResponseCodes.INVALID_REQUEST);
+    });
+  });
+
+  describe('Login - Fail: Invalid password', function() {
+    const userName = 'foo';
+    const { client } = setup(function* () {
+      yield Actions.userRegistered({ userName, password: 'bah' });
+      yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
+    });
+
+    let response = null;
+    before(function(done) {
+      client.trigger(Events.AUTH_LOGIN, {
+        userName,
+        password: 'incorrect'
+      }, r => {
+        response = r;
+        done();
+      });
+    });
+
+    it('should respond to client', function() {
+      expect(response).to.exist;
+      expect(response.ok).to.be.false;
+      expect(response.code).to.equal(ResponseCodes.INVALID_REQUEST);
+    });
+  });
+
+  // describe('Unregister - Success', function() {
   //   it('should acknowledge the subject', function() {});
   //   it('should inform observers', function() { });
   //   it('should amend the state', function() { });
   // });
   //
-  // describe('Login', function() {
-  //   before(function() {
-  //   });
-  //   it('should inform observers', function() {
-  //   });
-  //   it('should emit players to subject', function() {
-  //   });
-  //   it('should emit documents to subject', function() {
-  //   });
-  // });
   //
   // describe('Logout', function() {
   //   before(function() {

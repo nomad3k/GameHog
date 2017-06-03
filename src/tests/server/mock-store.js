@@ -1,9 +1,8 @@
 import createStore from '../../shared/store/store';
 
 export default class MockStore {
-  events = [ ];
-
   constructor() {
+    this.events = [ ];
     this.store = createStore();
   }
 
