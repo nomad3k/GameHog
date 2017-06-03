@@ -12,6 +12,7 @@
     "style:watch": "npm run style -- --watch",
     "test": "mocha --compilers js:babel-register --compilers jsx:babel-register src/tests/**/*.test.js --recursive",
     "test:watch": "npm run test -- --watch --growl",
+    "test:debug": "npm run test -- --inspect --debug-brk",
     "dist": "npm run dist:copy & npm run dist:pack",
     "dist:pack": "webpack --config ./src/cfg/webpack.config.dist.js",
     "dist:copy": "copyfiles -u 1 src/content/* src/content/**/* ./dist"

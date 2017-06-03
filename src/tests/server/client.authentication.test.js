@@ -27,25 +27,28 @@ function setup(initialiser) {
 
 describe('Client:Authentication', function() {
 
+  // ---------------------------------------------------------------------------
+  // Register - Success
+  // ---------------------------------------------------------------------------
+
   describe('Register - Success', function() {
     const { client, store } = setup();
 
     let response = null;
     before(function(done) {
-      const request = {
+      client.trigger(Events.AUTH_REGISTER, {
         userName: 'u',
         password: 'pwd',
         playerName: 'p',
         characterName: 'c'
-      };
-      client.trigger(Events.AUTH_REGISTER, request, r => {
+      }, r => {
         response = r;
         done();
       });
     });
 
     it('should register handlers', function() {
-      expect(client.handlers[Events.AUTH_REGISTER]).to.not.be.undefined;
+      expect(client.handlers[Events.AUTH_REGISTER]).to.exist;
     });
 
     it('should acknowledge the subject', function() {
@@ -86,6 +89,10 @@ describe('Client:Authentication', function() {
     });
   });
 
+  // ---------------------------------------------------------------------------
+  // Register - Fail: Bad Request
+  // ---------------------------------------------------------------------------
+
   describe('Register - Fail: Bad Request', function() {
     const { client } = setup();
 
@@ -100,12 +107,20 @@ describe('Client:Authentication', function() {
     it('should inform the subject', function() {
       expect(response.ok).to.be.false;
       expect(response.code).to.equal(ResponseCodes.BAD_REQUEST);
-      expect(response.errors.userName).to.not.be.undefined;
-      expect(response.errors.password).to.not.be.undefined;
-      expect(response.errors.playerName).to.not.be.undefined;
-      expect(response.errors.characterName).to.not.be.undefined;
+      expect(response.errors.userName).to.exist;
+      expect(response.errors.password).to.exist;
+      expect(response.errors.playerName).to.exist;
+      expect(response.errors.characterName).to.exist;
+    });
+
+    it('should not inform observers', function() {
+      expect(client.broadcast.events).to.be.empty;
     });
   });
+
+  // ---------------------------------------------------------------------------
+  // Register - Fail: Already Registered
+  // ---------------------------------------------------------------------------
 
   describe('Register - Fail: Already Registered', function() {
     const userName = 'foo';
@@ -116,26 +131,33 @@ describe('Client:Authentication', function() {
 
     let response = null;
     before(function(done) {
-      const params = {
+      client.trigger(Events.AUTH_REGISTER, {
         userName,
         password: 'xxx',
         playerName: 'P',
         characterName: 'C'
-      };
-      client.trigger(Events.AUTH_REGISTER, params, r => {
+      }, r => {
         response = r;
         done();
       });
     });
 
     it('should inform the subject', function() {
-      expect(response).to.not.be.undefined;
+      expect(response).to.exist;
       expect(response.ok).to.be.false;
       expect(response.code).to.equal(ResponseCodes.INVALID_OPERATION);
-      expect(response.message).to.not.be.undefined;
-      expect(response.errors.userName).to.not.be.undefined;
+      expect(response.message).to.exist;
+      expect(response.errors.userName).to.exist;
+    });
+
+    it('should not inform observers', function() {
+      expect(client.broadcast.events).to.be.empty;
     });
   });
+
+  // ---------------------------------------------------------------------------
+  // Login - Success
+  // ---------------------------------------------------------------------------
 
   describe('Login - Success', function() {
     const { client } = setup(function* () {
@@ -145,18 +167,17 @@ describe('Client:Authentication', function() {
 
     let response = null;
     before(function(done) {
-      const params = {
+      client.trigger(Events.AUTH_LOGIN, {
         userName: 'foo',
         password: 'bah'
-      };
-      client.trigger(Events.AUTH_LOGIN, params, r => {
+      }, r => {
         response = r;
         done();
       });
     });
 
     it('should inform subject', function() {
-      expect(response).to.not.be.undefined;
+      expect(response).to.exist;
       expect(response.ok).to.be.true;
       expect(response.code).to.equal(ResponseCodes.OK);
     });
@@ -176,10 +197,11 @@ describe('Client:Authentication', function() {
         userName: 'foo'
       });
     });
-
-    it('should emit documents to subject', function() {
-    });
   });
+
+  // ---------------------------------------------------------------------------
+  // Login - Fail: Bad Request
+  // ---------------------------------------------------------------------------
 
   describe('Login - Fail: Bad Request', function() {
     const { client } = setup(function* () {
@@ -189,8 +211,7 @@ describe('Client:Authentication', function() {
 
     let response;
     before(function(done) {
-      const params = { };
-      client.trigger(Events.AUTH_LOGIN, params, r => {
+      client.trigger(Events.AUTH_LOGIN, { }, r => {
         response = r;
         done();
       });
@@ -201,7 +222,15 @@ describe('Client:Authentication', function() {
       expect(response.ok).to.be.false;
       expect(response.code).to.equal(ResponseCodes.BAD_REQUEST);
     });
+
+    it('should not inform observers', function() {
+      expect(client.broadcast.events).to.be.empty;
+    });
   });
+
+  // ---------------------------------------------------------------------------
+  // Login - Fail: Unknown user
+  // ---------------------------------------------------------------------------
 
   describe('Login - Fail: Unknown user', function() {
     const { client } = setup();
@@ -222,7 +251,15 @@ describe('Client:Authentication', function() {
       expect(response.ok).to.be.false;
       expect(response.code).to.equal(ResponseCodes.INVALID_REQUEST);
     });
+
+    it('should not inform observers', function() {
+      expect(client.broadcast.events).to.be.empty;
+    });
   });
+
+  // ---------------------------------------------------------------------------
+  // Login - Fail: Invalid password
+  // ---------------------------------------------------------------------------
 
   describe('Login - Fail: Invalid password', function() {
     const userName = 'foo';
@@ -246,6 +283,10 @@ describe('Client:Authentication', function() {
       expect(response).to.exist;
       expect(response.ok).to.be.false;
       expect(response.code).to.equal(ResponseCodes.INVALID_REQUEST);
+    });
+
+    it('should not inform observers', function() {
+      expect(client.broadcast.events).to.be.empty;
     });
   });
 
