@@ -32,15 +32,20 @@ describe('Client:Authentication', function() {
   // ---------------------------------------------------------------------------
 
   describe('Register - Success', function() {
+    const userName = 'xcvfd';
+    const password = 'afgasdfasdf';
+    const playerName = '3r2ronqfeow';
+    const characterName = 'gfasdfaf';
+
     const { client, store } = setup();
 
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_REGISTER, {
-        userName: 'u',
-        password: 'pwd',
-        playerName: 'p',
-        characterName: 'c'
+        userName,
+        password,
+        playerName,
+        characterName
       }, r => {
         response = r;
         done();
@@ -56,9 +61,9 @@ describe('Client:Authentication', function() {
       const args = client.getArgsForSingleEvent(Events.EVENT);
       expect(args).to.deep.equal({
         type: Types.PLAYER_REGISTERED,
-        userName: 'u',
-        playerName: 'p',
-        characterName: 'c'
+        userName,
+        playerName,
+        characterName
       });
     });
 
@@ -66,9 +71,9 @@ describe('Client:Authentication', function() {
       const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
       expect(args).to.deep.equal({
         type: Types.PLAYER_REGISTERED,
-        userName: 'u',
-        playerName: 'p',
-        characterName: 'c'
+        userName,
+        playerName,
+        characterName
       });
     });
 
@@ -76,14 +81,14 @@ describe('Client:Authentication', function() {
       const users = store.getState().get(State.USERS).toJS();
       const players = store.getState().get(State.PLAYERS).toJS();
       expect(users).to.deep.equal({
-        u: {
-          password: 'pwd'
+        [userName]: {
+          password
         }
       });
       expect(players).to.deep.equal({
-        'u': {
-          playerName: 'p',
-          characterName: 'c',
+        [userName]: {
+          playerName,
+          characterName,
           connected: false
         }
       });
@@ -307,6 +312,7 @@ describe('Client:Authentication', function() {
 
   describe('Logout - Success', function() {
     const userName = 'foo', password = 'bah';
+
     const { client, store } = setup(function*() {
       yield Actions.userRegistered({ userName, password });
       yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
@@ -326,7 +332,6 @@ describe('Client:Authentication', function() {
           done();
         });
       });
-
     });
 
     it('should remove the client.user', function() {
@@ -352,5 +357,4 @@ describe('Client:Authentication', function() {
       expect(args.type).to.equal(Types.PLAYER_DISCONNECTED);
     });
   });
-
 });
