@@ -56,7 +56,7 @@ describe('Client:Authentication', function() {
       expect(client.handlers[Events.AUTH_REGISTER]).to.exist;
     });
 
-    it('should acknowledge the subject', function() {
+    it('should respond to the subject', function() {
       expect(response.ok).to.be.true;
       const args = client.getArgsForSingleEvent(Events.EVENT);
       expect(args).to.deep.equal({
@@ -67,7 +67,7 @@ describe('Client:Authentication', function() {
       });
     });
 
-    it('should inform observers', function() {
+    it('should inform the observers', function() {
       const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
       expect(args).to.deep.equal({
         type: Types.PLAYER_REGISTERED,
@@ -110,7 +110,7 @@ describe('Client:Authentication', function() {
       });
     });
 
-    it('should inform the subject', function() {
+    it('should respond to the subject', function() {
       expect(response.ok).to.be.false;
       expect(response.code).to.equal(ResponseCodes.BAD_REQUEST);
       expect(response.errors.userName).to.exist;
@@ -119,7 +119,7 @@ describe('Client:Authentication', function() {
       expect(response.errors.characterName).to.exist;
     });
 
-    it('should not inform observers', function() {
+    it('should not inform the observers', function() {
       expect(client.broadcast.events).to.be.empty;
     });
   });
@@ -148,7 +148,7 @@ describe('Client:Authentication', function() {
       });
     });
 
-    it('should inform the subject', function() {
+    it('should respond to the subject', function() {
       expect(response).to.exist;
       expect(response.ok).to.be.false;
       expect(response.code).to.equal(ResponseCodes.INVALID_OPERATION);
@@ -156,7 +156,7 @@ describe('Client:Authentication', function() {
       expect(response.errors.userName).to.exist;
     });
 
-    it('should not inform observers', function() {
+    it('should not inform the observers', function() {
       expect(client.broadcast.events).to.be.empty;
     });
   });
@@ -187,7 +187,7 @@ describe('Client:Authentication', function() {
       expect(client.user).to.exist;
     });
 
-    it('should inform subject', function() {
+    it('should respond to the subject', function() {
       expect(response).to.exist;
       expect(response.ok).to.be.true;
       expect(response.code).to.equal(ResponseCodes.OK);
@@ -198,7 +198,7 @@ describe('Client:Authentication', function() {
       expect(connected).to.be.true;
     });
 
-    it('should inform observers', function() {
+    it('should inform the observers', function() {
       const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
       expect(args).to.deep.equal({
         type: Types.PLAYER_CONNECTED,
@@ -233,13 +233,13 @@ describe('Client:Authentication', function() {
       });
     });
 
-    it('should inform the subject', function() {
+    it('should respond to the subject', function() {
       expect(response).to.exist;
       expect(response.ok).to.be.false;
       expect(response.code).to.equal(ResponseCodes.BAD_REQUEST);
     });
 
-    it('should not inform observers', function() {
+    it('should not inform the observers', function() {
       expect(client.broadcast.events).to.be.empty;
     });
   });
@@ -262,13 +262,13 @@ describe('Client:Authentication', function() {
       });
     });
 
-    it('should inform the subject', function() {
+    it('should respond to the subject', function() {
       expect(response).to.exist;
       expect(response.ok).to.be.false;
       expect(response.code).to.equal(ResponseCodes.INVALID_REQUEST);
     });
 
-    it('should not inform observers', function() {
+    it('should not inform the observers', function() {
       expect(client.broadcast.events).to.be.empty;
     });
   });
@@ -301,13 +301,13 @@ describe('Client:Authentication', function() {
       expect(response.code).to.equal(ResponseCodes.INVALID_REQUEST);
     });
 
-    it('should not inform observers', function() {
+    it('should not inform the observers', function() {
       expect(client.broadcast.events).to.be.empty;
     });
   });
 
   // ---------------------------------------------------------------------------
-  // Login - Fail: Bad Request
+  // Logout - Success
   // ---------------------------------------------------------------------------
 
   describe('Logout - Success', function() {
@@ -334,11 +334,15 @@ describe('Client:Authentication', function() {
       });
     });
 
+    it('should register the handlers', function() {
+      expect(client.handlers[Events.AUTH_LOGOUT]).to.exist;
+    });
+
     it('should remove the client.user', function() {
       expect(client.user).to.not.exist;
     });
 
-    it('should inform subject', function() {
+    it('should respond to the subject', function() {
       expect(response).to.exist;
       expect(response.ok).to.be.true;
       expect(response.code).to.equal(ResponseCodes.OK);
@@ -351,10 +355,40 @@ describe('Client:Authentication', function() {
       expect(player.connected).to.be.false;
     });
 
+    it('should notify the subject', function() {
+      const args = client.getArgsForSingleEvent(Events.EVENT);
+      expect(args).to.exist;
+      expect(args.type).to.equal(Types.PLAYER_DISCONNECTED);
+    });
+
     it('should notify observers', function() {
       const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
       expect(args).to.exist;
       expect(args.type).to.equal(Types.PLAYER_DISCONNECTED);
     });
+  });
+
+  // ---------------------------------------------------------------------------
+  // Logout - Fail: Not logged in
+  // ---------------------------------------------------------------------------
+
+  describe('Logout - Fail: Not logged in', function() {
+
+    const { client } = setup();
+
+    let response = null;
+    before(function(done) {
+      client.trigger(Events.AUTH_LOGOUT, { }, r => {
+        response = r;
+        done();
+      });
+    });
+
+    it('should respond to the subject', function() {
+      expect(response).to.exist;
+      expect(response.ok).to.be.false;
+      expect(response.code).to.equal(ResponseCodes.AUTH_REQUIRED);
+    });
+
   });
 });
