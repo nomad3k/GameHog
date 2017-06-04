@@ -53,7 +53,7 @@ describe('Client:Authentication', function() {
 
     it('should acknowledge the subject', function() {
       expect(response.ok).to.be.true;
-      const args = client.getArgsForSingleEvent(Events.PLAYER_REGISTERED);
+      const args = client.getArgsForSingleEvent(Events.EVENT);
       expect(args).to.deep.equal({
         type: Types.PLAYER_REGISTERED,
         userName: 'u',
@@ -63,7 +63,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should inform observers', function() {
-      const args = client.broadcast.getArgsForSingleEvent(Events.PLAYER_REGISTERED);
+      const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
       expect(args).to.deep.equal({
         type: Types.PLAYER_REGISTERED,
         userName: 'u',
@@ -83,7 +83,8 @@ describe('Client:Authentication', function() {
       expect(players).to.deep.equal({
         'u': {
           playerName: 'p',
-          characterName: 'c'
+          characterName: 'c',
+          connected: false
         }
       });
     });
@@ -160,20 +161,25 @@ describe('Client:Authentication', function() {
   // ---------------------------------------------------------------------------
 
   describe('Login - Success', function() {
-    const { client } = setup(function* () {
-      yield Actions.userRegistered({ userName: 'foo', password: 'bah' });
-      yield Actions.playerRegistered({ userName: 'foo', playerName: 'Foo', characterName: 'Foo' });
+    const userName = 'xxx', password = 'yyy';
+    const { client, store } = setup(function* () {
+      yield Actions.userRegistered({ userName, password });
+      yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
     });
 
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_LOGIN, {
-        userName: 'foo',
-        password: 'bah'
+        userName,
+        password
       }, r => {
         response = r;
         done();
       });
+    });
+
+    it('should set the client.user', function() {
+      expect(client.user).to.exist;
     });
 
     it('should inform subject', function() {
@@ -182,11 +188,16 @@ describe('Client:Authentication', function() {
       expect(response.code).to.equal(ResponseCodes.OK);
     });
 
+    it('should amend state', function() {
+      const connected = store.getState().getIn([State.PLAYERS, userName, 'connected']);
+      expect(connected).to.be.true;
+    });
+
     it('should inform observers', function() {
       const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
       expect(args).to.deep.equal({
         type: Types.PLAYER_CONNECTED,
-        userName: 'foo'
+        userName
       });
     });
 
@@ -194,7 +205,7 @@ describe('Client:Authentication', function() {
       const args = client.getArgsForSingleEvent(Events.EVENT);
       expect(args).to.deep.equal({
         type: Types.PLAYER_CONNECTED,
-        userName: 'foo'
+        userName
       });
     });
   });
@@ -290,20 +301,56 @@ describe('Client:Authentication', function() {
     });
   });
 
-  // describe('Unregister - Success', function() {
-  //   it('should acknowledge the subject', function() {});
-  //   it('should inform observers', function() { });
-  //   it('should amend the state', function() { });
-  // });
-  //
-  //
-  // describe('Logout', function() {
-  //   before(function() {
-  //   });
-  //   it('should inform observers', function() {
-  //   });
-  //   it('should reset subject', function() {
-  //   });
-  // });
+  // ---------------------------------------------------------------------------
+  // Login - Fail: Bad Request
+  // ---------------------------------------------------------------------------
+
+  describe('Logout - Success', function() {
+    const userName = 'foo', password = 'bah';
+    const { client, store } = setup(function*() {
+      yield Actions.userRegistered({ userName, password });
+      yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
+    });
+
+    let response = null;
+    before(function(done) {
+      client.trigger(Events.AUTH_LOGIN, {
+        userName,
+        password
+      }, _r => {
+        client.clear();
+        client.broadcast.clear();
+        client.trigger(Events.AUTH_LOGOUT, {
+        }, r2 => {
+          response = r2;
+          done();
+        });
+      });
+
+    });
+
+    it('should remove the client.user', function() {
+      expect(client.user).to.not.exist;
+    });
+
+    it('should inform subject', function() {
+      expect(response).to.exist;
+      expect(response.ok).to.be.true;
+      expect(response.code).to.equal(ResponseCodes.OK);
+    });
+
+    it('should amend state', function() {
+      const state = store.getState();
+      const player = state.getIn([State.PLAYERS, userName]).toJS();
+      expect(player).to.exist;
+      expect(player.connected).to.be.false;
+    });
+
+    it('should notify observers', function() {
+      const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
+      expect(args).to.exist;
+      expect(args.type).to.equal(Types.PLAYER_DISCONNECTED);
+    });
+  });
 
 });

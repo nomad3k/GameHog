@@ -10,3 +10,4 @@ export const EVENT                = 'Event';
 
 export const AUTH_REGISTER        = 'Auth:Register';
 export const AUTH_LOGIN           = 'Auth:Login';
+export const AUTH_LOGOUT          = 'Auth:Logout';

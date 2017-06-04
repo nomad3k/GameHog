@@ -10,6 +10,7 @@ export default class MockClient {
     }
   }
   emit(eventName, args) {
+    if (!eventName) throw new Error('Missing argument: eventName')
     this.events.push({ eventName, args });
   }
   on(eventName, handler) {

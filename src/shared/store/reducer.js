@@ -27,7 +27,23 @@ export default function reducer(state = State.initialState, action) {
       const { userName, playerName, characterName } = action;
       return state.setIn(
         [State.PLAYERS, userName ],
-        Map({ playerName, characterName })
+        Map({ playerName, characterName, connected: false })
+      );
+    }
+
+    case Types.PLAYER_CONNECTED: {
+      const { userName } = action;
+      return state.setIn(
+        [State.PLAYERS, userName, 'connected'],
+        true
+      );
+    }
+
+    case Types.PLAYER_DISCONNECTED: {
+      const { userName } = action;
+      return state.setIn(
+        [State.PLAYERS, userName, 'connected'],
+        false
       );
     }
 

@@ -48,3 +48,11 @@ export function playerConnected({ userName }) {
     userName
   }
 }
+
+export function playerDisconnected({ userName }) {
+  if (!userName) throw new ArgumentRequiredError('userName');
+  return {
+    type: Types.PLAYER_DISCONNECTED,
+    userName
+  }
+}

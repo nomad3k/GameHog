@@ -8,6 +8,24 @@ export function ok() {
   };
 }
 
+export function authRequired(errors) {
+  return {
+    ok: false,
+    code: ResponseCode.AUTH_REQUIRED,
+    message: 'Authentication required',
+    errors
+  };
+}
+
+export function anonRequire(errors) {
+  return {
+    ok: false,
+    code: ResponseCode.ANON_REQUIRED,
+    message: 'Anonymous required',
+    errors
+  };
+}
+
 export function badRequest(errors) {
   return {
     ok: false,
