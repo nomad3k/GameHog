@@ -100,8 +100,9 @@ describe('Client:Authentication', function() {
   // ---------------------------------------------------------------------------
 
   describe('Register - Fail: Bad Request', function() {
-    const { client } = setup();
+    const { client, store } = setup();
 
+    let initialState = store.getState().toJS();
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_REGISTER, { }, r => {
@@ -122,6 +123,10 @@ describe('Client:Authentication', function() {
     it('should not inform the observers', function() {
       expect(client.broadcast.events).to.be.empty;
     });
+
+    it('should not amend the state', function() {
+      expect(store.getState().toJS()).to.deep.equal(initialState);
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -130,11 +135,12 @@ describe('Client:Authentication', function() {
 
   describe('Register - Fail: Already Registered', function() {
     const userName = 'foo';
-    const { client } = setup(function* () {
+    const { client, store } = setup(function* () {
       yield Actions.userRegistered({ userName, password: 'bah' });
       yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
     });
 
+    let initialState = store.getState().toJS();
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_REGISTER, {
@@ -158,6 +164,10 @@ describe('Client:Authentication', function() {
 
     it('should not inform the observers', function() {
       expect(client.broadcast.events).to.be.empty;
+    });
+
+    it('should not amend the state', function() {
+      expect(store.getState().toJS()).to.deep.equal(initialState);
     });
   });
 
@@ -220,11 +230,12 @@ describe('Client:Authentication', function() {
   // ---------------------------------------------------------------------------
 
   describe('Login - Fail: Bad Request', function() {
-    const { client } = setup(function* () {
+    const { client, store } = setup(function* () {
       yield Actions.userRegistered({ userName: 'foo', password: 'bah' });
       yield Actions.playerRegistered({ userName: 'foo', playerName: 'Foo', characterName: 'Foo' });
     });
 
+    let initialState = store.getState().toJS();
     let response;
     before(function(done) {
       client.trigger(Events.AUTH_LOGIN, { }, r => {
@@ -242,6 +253,10 @@ describe('Client:Authentication', function() {
     it('should not inform the observers', function() {
       expect(client.broadcast.events).to.be.empty;
     });
+
+    it('should not amend the state', function() {
+      expect(store.getState().toJS()).to.deep.equal(initialState);
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -249,8 +264,9 @@ describe('Client:Authentication', function() {
   // ---------------------------------------------------------------------------
 
   describe('Login - Fail: Unknown user', function() {
-    const { client } = setup();
+    const { client, store } = setup();
 
+    let initialState = store.getState().toJS();
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_LOGIN, {
@@ -271,6 +287,10 @@ describe('Client:Authentication', function() {
     it('should not inform the observers', function() {
       expect(client.broadcast.events).to.be.empty;
     });
+
+    it('should not amend the state', function() {
+      expect(store.getState().toJS()).to.deep.equal(initialState);
+    });
   });
 
   // ---------------------------------------------------------------------------
@@ -279,11 +299,12 @@ describe('Client:Authentication', function() {
 
   describe('Login - Fail: Invalid password', function() {
     const userName = 'foo';
-    const { client } = setup(function* () {
+    const { client, store } = setup(function* () {
       yield Actions.userRegistered({ userName, password: 'bah' });
       yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
     });
 
+    let initialState = store.getState().toJS();
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_LOGIN, {
@@ -303,6 +324,10 @@ describe('Client:Authentication', function() {
 
     it('should not inform the observers', function() {
       expect(client.broadcast.events).to.be.empty;
+    });
+
+    it('should not amend the state', function() {
+      expect(store.getState().toJS()).to.deep.equal(initialState);
     });
   });
 
@@ -374,8 +399,9 @@ describe('Client:Authentication', function() {
 
   describe('Logout - Fail: Not logged in', function() {
 
-    const { client } = setup();
+    const { client, store } = setup();
 
+    let initialState = store.getState().toJS();
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_LOGOUT, { }, r => {
@@ -390,5 +416,12 @@ describe('Client:Authentication', function() {
       expect(response.code).to.equal(ResponseCodes.AUTH_REQUIRED);
     });
 
+    it('should not inform the observers', function() {
+      expect(client.broadcast.events).to.be.empty;
+    });
+
+    it('should not amend the state', function() {
+      expect(store.getState().toJS()).to.deep.equal(initialState);
+    });
   });
 });
