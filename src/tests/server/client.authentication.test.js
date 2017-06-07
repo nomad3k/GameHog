@@ -78,8 +78,9 @@ describe('Client:Authentication', function() {
     });
 
     it('should amend the state', function() {
-      const users = store.getState().get(State.USERS).toJS();
-      const players = store.getState().get(State.PLAYERS).toJS();
+      const { shared } = store.getState();
+      const users = shared.get(State.USERS).toJS();
+      const players = shared.get(State.PLAYERS).toJS();
       expect(users).to.deep.equal({
         [userName]: {
           password
@@ -101,8 +102,9 @@ describe('Client:Authentication', function() {
 
   describe('Register - Fail: Bad Request', function() {
     const { client, store } = setup();
+    const { shared } = store.getState();
 
-    let initialState = store.getState().toJS();
+    let initialState = shared.toJS();
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_REGISTER, { }, r => {
@@ -125,7 +127,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not amend the state', function() {
-      expect(store.getState().toJS()).to.deep.equal(initialState);
+      expect(store.getState().shared.toJS()).to.deep.equal(initialState);
     });
   });
 
@@ -140,7 +142,7 @@ describe('Client:Authentication', function() {
       yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
     });
 
-    let initialState = store.getState().toJS();
+    let initialState = store.getState().shared.toJS();
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_REGISTER, {
@@ -167,7 +169,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not amend the state', function() {
-      expect(store.getState().toJS()).to.deep.equal(initialState);
+      expect(store.getState().shared.toJS()).to.deep.equal(initialState);
     });
   });
 
@@ -204,7 +206,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should amend state', function() {
-      const connected = store.getState().getIn([State.PLAYERS, userName, 'connected']);
+      const connected = store.getState().shared.getIn([State.PLAYERS, userName, 'connected']);
       expect(connected).to.be.true;
     });
 
@@ -235,7 +237,7 @@ describe('Client:Authentication', function() {
       yield Actions.playerRegistered({ userName: 'foo', playerName: 'Foo', characterName: 'Foo' });
     });
 
-    let initialState = store.getState().toJS();
+    let initialState = store.getState().shared.toJS();
     let response;
     before(function(done) {
       client.trigger(Events.AUTH_LOGIN, { }, r => {
@@ -255,7 +257,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not amend the state', function() {
-      expect(store.getState().toJS()).to.deep.equal(initialState);
+      expect(store.getState().shared.toJS()).to.deep.equal(initialState);
     });
   });
 
@@ -266,7 +268,7 @@ describe('Client:Authentication', function() {
   describe('Login - Fail: Unknown user', function() {
     const { client, store } = setup();
 
-    let initialState = store.getState().toJS();
+    let initialState = store.getState().shared.toJS();
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_LOGIN, {
@@ -289,7 +291,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not amend the state', function() {
-      expect(store.getState().toJS()).to.deep.equal(initialState);
+      expect(store.getState().shared.toJS()).to.deep.equal(initialState);
     });
   });
 
@@ -304,7 +306,7 @@ describe('Client:Authentication', function() {
       yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
     });
 
-    let initialState = store.getState().toJS();
+    let initialState = store.getState().shared.toJS();
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_LOGIN, {
@@ -327,7 +329,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not amend the state', function() {
-      expect(store.getState().toJS()).to.deep.equal(initialState);
+      expect(store.getState().shared.toJS()).to.deep.equal(initialState);
     });
   });
 
@@ -374,7 +376,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should amend state', function() {
-      const state = store.getState();
+      const state = store.getState().shared;
       const player = state.getIn([State.PLAYERS, userName]).toJS();
       expect(player).to.exist;
       expect(player.connected).to.be.false;
@@ -401,7 +403,7 @@ describe('Client:Authentication', function() {
 
     const { client, store } = setup();
 
-    let initialState = store.getState().toJS();
+    let initialState = store.getState().shared.toJS();
     let response = null;
     before(function(done) {
       client.trigger(Events.AUTH_LOGOUT, { }, r => {
@@ -421,7 +423,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not amend the state', function() {
-      expect(store.getState().toJS()).to.deep.equal(initialState);
+      expect(store.getState().shared.toJS()).to.deep.equal(initialState);
     });
   });
 });

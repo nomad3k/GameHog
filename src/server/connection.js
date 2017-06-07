@@ -64,7 +64,7 @@ export function connect(store) {
       });
       if (errors) return callback(badRequest(errors));
       const { userName, password, playerName, characterName } = data;
-      const user = store.getState().getIn([State.USERS, userName]);
+      const user = store.getState().shared.getIn([State.USERS, userName]);
       if (user) return callback(invalidOperation({ userName: ['User exists.'] }));
 
       const pr = Actions.playerRegistered({
@@ -95,7 +95,7 @@ export function connect(store) {
       if (errors) {
         return callback(badRequest(errors));
       }
-      const user = store.getState().getIn([State.USERS, data.userName]);
+      const user = store.getState().shared.getIn([State.USERS, data.userName]);
       if (!user || user.get('password') != data.password) {
         return callback(invalidRequest({ userName: ['Unknown Username or Password'] }));
       }

@@ -28,7 +28,7 @@ describe('Client:Connection', function() {
     });
 
     it('should amend the state', function() {
-      const state = store.getState();
+      const state = store.getState().shared;
       const player = state.getIn([State.CLIENTS, client.id]);
       expect(player).to.exist;
       expect(player.toJS()).to.deep.equal({ });
@@ -57,7 +57,7 @@ describe('Client:Connection', function() {
     });
 
     it('should amend the state', function() {
-      const state = store.getState();
+      const state = store.getState().shared;
       const players = state.get(State.CLIENTS).toJS();
       expect(players).to.deep.equal({ });
     });

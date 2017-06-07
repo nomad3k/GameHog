@@ -1,9 +1,10 @@
-import createStore from '../../shared/store/store';
+import createStore from '../../server/store/store';
 
 export default class MockStore {
   constructor() {
     this.events = [ ];
     this.store = createStore();
+    console.log(this.store.getState());
   }
 
   dispatch(event) {
