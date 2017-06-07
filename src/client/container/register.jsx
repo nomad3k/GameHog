@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { Textfield } from '../controls';
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
 
@@ -9,7 +10,7 @@ class RegisterPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
+      userName: '',
       password: '',
       confirmPassword: '',
       playerName: '',
@@ -27,49 +28,34 @@ class RegisterPage extends React.Component {
       <Template title='Register'>
         <div className='gh-register'>
           <form onSubmit={this.onSubmit.bind(this)}>
-            <div>
-              <div>
-                <input type='text'
-                       placeholder='Username'
-                       value={this.state.username}
-                       onChange={e => this.setState({ username: e.target.value })}
+            <Textfield placeholder='Username'
+                       value={this.state.userName}
+                       onChange={e => this.setState({ userName: e.target.value })}
+                       errors={this.state.errors.userName}
                        autoFocus
                        required />
-                <span className='gh-validation--fail'>{this.state.errors.username}</span>
-              </div>
-              <div>
-                <input type='password'
+            <Textfield type='password'
                        placeholder='Password'
                        value={this.state.password}
                        onChange={e => this.setState({ password: e.target.value })}
+                       errors={this.state.errors.password}
                        required />
-                <span className='gh-validation--fail'>{this.state.errors.password}</span>
-              </div>
-              <div>
-                <input type='password'
+            <Textfield type='password'
                        placeholder='Confirm Password'
                        value={this.state.confirmPassword}
                        onChange={e => this.setState({ confirmPassword: e.target.value })}
+                       errors={this.state.errors.confirmPassword}
                        required />
-                <span className='gh-validation--fail'>{this.state.errors.confirmPassword}</span>
-              </div>
-              <div>
-                <input type='text'
-                       placeholder='Player Name'
+            <Textfield placeholder='Player Name'
                        value={this.state.playerName}
                        onChange={e => this.setState({ playerName: e.target.value })}
+                       errors={this.state.errors.playerName}
                        required />
-                     <span className='gh-validation--fail'>{this.state.errors.playerName}</span>
-              </div>
-              <div>
-                <input type='text'
-                       placeholder='Character Name'
+            <Textfield placeholder='Character Name'
                        value={this.state.characterName}
                        onChange={e => this.setState({ characterName: e.target.value })}
+                       errors={this.state.errors.characterName}
                        required />
-                <span className='gh-validation--fail'>{this.state.errors.characterName}</span>
-              </div>
-            </div>
             <div>
               <button type='submit'>Register</button>
             </div>

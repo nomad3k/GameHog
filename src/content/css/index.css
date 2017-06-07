@@ -201,4 +201,10 @@ button {
   border-radius: 4px;
   padding: 8px; }
 
+.gh-errors {
+  margin: 0; }
+
+.gh-errors__item {
+  color: #cc0000; }
+
 /*# sourceMappingURL=index.css.map */
