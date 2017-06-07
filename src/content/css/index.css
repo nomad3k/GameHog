@@ -189,10 +189,12 @@ html, body {
 button, input {
   font-size: 16px; }
 
-input {
+textarea,
+input[type=text],
+input[type=password] {
   margin: 4px;
   padding: 4px;
-  width: 100%; }
+  width: calc(100% - 10px); }
 
 button {
   border-style: none;

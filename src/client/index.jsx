@@ -12,11 +12,12 @@ import Homepage from './container/homepage';
 import LoginPage from './container/login';
 import LogoutPage from './container/logout';
 import RegisterPage from './container/register';
+import UnregisterPage from './container/unregister';
 import NotFound from './components/not-found';
 
 import createStore from './store/store';
 
-var store = createStore();
+const store = createStore();
 
 ReactDOM.render(
   <Provider store={store}>
@@ -26,6 +27,7 @@ ReactDOM.render(
         <Route exact path='/login' component={LoginPage} />
         <Route exact path='/logout' component={LogoutPage} />
         <Route exact path='/register' component={RegisterPage} />
+        <Route exact path='/unregister' component={UnregisterPage} />
         <Route component={NotFound} />
       </Switch>
     </Router>

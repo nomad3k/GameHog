@@ -4,10 +4,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
+import Template from '../containers/template';
 import * as Actions from '../store/actions';
-
-import PlayerList from '../components/player-list';
-import DocumentList from '../components/document-list';
 
 class Homepage extends React.Component {
   static propTypes = {
@@ -15,34 +13,11 @@ class Homepage extends React.Component {
     players: PropTypes.object,
     documents: PropTypes.object
   }
-  static connected = false;
-  componentDidMount() {
-    const { actions } = this.props;
-    if (!Homepage.connected) {
-      Homepage.connected = true;
-      actions.socketConnect();
-    }
-  }
   render() {
-    const { identity, players, documents, actions } = this.props;
     return (
-      <div className='gh-homepage'>
-        <div className='gh-homepage__header'>
-          <PlayerList identity={identity}
-                      players={players} />
-          <div className='gh-menu'>
-            <Link to='/register'>Register</Link>
-            <Link to='/login'>Login</Link>
-            <Link to='/logout'>Logout</Link>
-          </div>
-        </div>
-        <div className='gh-homepage__content'>
-          <DocumentList documents={documents}
-                        players={players}
-                        actions={actions}
-                        />
-        </div>
-      </div>
+      <Template title='Homepage'>
+        <p>Homepage</p>
+      </Template>
     );
   }
 }

@@ -4,7 +4,6 @@ export default class MockStore {
   constructor() {
     this.events = [ ];
     this.store = createStore();
-    console.log(this.store.getState());
   }
 
   dispatch(event) {

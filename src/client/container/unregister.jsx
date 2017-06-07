@@ -19,11 +19,11 @@ class LogoutPage extends React.Component {
 
   render() {
     return (
-      <Template title='Logout'>
-        <div className='gh-login'>
+      <Template title='Unregister'>
+        <div className='gh-unregister'>
           <form onSubmit={this.onSubmit.bind(this)}>
             <div>
-              <button type='submit'>Logout</button>
+              <button type='submit'>Unregister</button>
             </div>
           </form>
         </div>
