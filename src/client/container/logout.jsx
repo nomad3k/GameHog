@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
+import { Panel, Card, Row, Spacer, Checkbox } from '../controls';
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
 
@@ -20,13 +21,17 @@ class LogoutPage extends React.Component {
   render() {
     return (
       <Template title='Logout'>
-        <div className='gh-login'>
-          <form onSubmit={this.onSubmit.bind(this)}>
-            <div>
-              <button type='submit'>Logout</button>
-            </div>
-          </form>
-        </div>
+        <Panel>
+          <Card>
+            <form onSubmit={this.onSubmit.bind(this)}>
+              <Checkbox label='Yes, log me out' required />
+              <Row>
+                <Spacer />
+                <button type='submit'>Logout</button>
+              </Row>
+            </form>
+          </Card>
+        </Panel>
       </Template>
     );
   }

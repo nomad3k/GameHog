@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import classnames from 'classnames';
 
-export default class Textfield extends Component {
+export default class Checkbox extends Component {
   static propTypes = {
-    type: PropTypes.string.isRequired,
     label: PropTypes.string,
-    value: PropTypes.any,
+    checked: PropTypes.any,
     onChange: PropTypes.func,
     required: PropTypes.bool,
     autoFocus: PropTypes.bool,
@@ -16,18 +15,20 @@ export default class Textfield extends Component {
   }
 
   static defaultProps = {
-    type: 'text'
   }
 
   render() {
-    const { type, label, value, onChange, required, autoFocus, className, style, errors } = this.props;
-    const attributes = { type, placeholder: label, value, onChange, required, autoFocus };
-    const c = classnames('gh-textfield', className);
+    const { label, checked, onChange, required, autoFocus, className, style, errors } = this.props;
+    const attributes = { checked, onChange, required, autoFocus };
+    const c = classnames('gh-checkbox', className);
     return (
       <div className={c} style={style}>
-        <input {...attributes} className='gh-textfield__input' />
+        <label>
+          <input type='checkbox' {...attributes} className='gh-checkbox__input' />
+          <span>{label}</span>
+        </label>
         {!errors ? null : (
-          <ul className='gh-textfield__errors gh-errors'>
+          <ul className='gh-checkbox__errors gh-errors'>
             {errors.map(e => (
               <li className='gh-errors__item' key={e}>{e}</li>
             ))}

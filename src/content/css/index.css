@@ -14,6 +14,14 @@ html, body {
 .gh-height--full {
   height: 100%; }
 
+.gh-layout--expand {
+  flex-grow: 1;
+  flex-shrink: 1; }
+
+.gh-layout--fixed {
+  flex-grow: 0;
+  flex-shrink: 0; }
+
 .gh-layout--row {
   display: flex;
   flex-direction: row; }
@@ -206,5 +214,16 @@ button {
 
 .gh-errors__item {
   color: #cc0000; }
+
+.gh-card {
+  margin: 16px;
+  padding: 16px;
+  border-radius: 2px;
+  box-shadow: 4px 4px 10px #eeeeee;
+  border: solid 1px #cccccc; }
+
+.gh-panel {
+  width: 400px;
+  margin: 0 auto; }
 
 /*# sourceMappingURL=index.css.map */
