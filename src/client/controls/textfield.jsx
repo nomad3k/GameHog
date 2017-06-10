@@ -20,7 +20,8 @@ export default class Textfield extends Component {
   }
 
   static defaultProps = {
-    type: 'text'
+    type: 'text',
+    maxLength: 255
   }
 
   render() {

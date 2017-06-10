@@ -1,8 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import { Link } from 'react-router-dom';
 
-import { Panel, Card, Row, Spacer, Button, Textfield } from '../controls';
+import { Panel, Card, CardHeader, CardContent, CardFooter, Section,
+  Spacer, Button, Textfield } from '../controls';
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
 
@@ -25,22 +27,28 @@ class LoginPage extends React.Component {
         <Panel>
           <Card>
             <form onSubmit={this.onSubmit.bind(this)}>
-              <Textfield label='Username'
-                         value={this.state.username}
-                         onChange={e => this.setState({ username: e.target.value })}
-                         errors={this.state.errors.username}
-                         autoFocus
-                         required />
-              <Textfield type='password'
-                         label='Password'
-                         value={this.state.password}
-                         onChange={e => this.setState({ password: e.target.value })}
-                         errors={this.state.errors.password}
-                         required />
-              <Row>
+              <CardHeader>Login</CardHeader>
+              <CardContent>
+                <Section>
+                  <Textfield label='Username'
+                             value={this.state.username}
+                             onChange={e => this.setState({ username: e.target.value })}
+                             errors={this.state.errors.username}
+                             autoFocus
+                             required />
+                  <Textfield type='password'
+                             label='Password'
+                             value={this.state.password}
+                             onChange={e => this.setState({ password: e.target.value })}
+                             errors={this.state.errors.password}
+                             required />
+                </Section>
+              </CardContent>
+              <CardFooter>
+                <Link className='gh-link' to='/register'>Register</Link>
                 <Spacer />
                 <Button type='submit'>Login</Button>
-              </Row>
+              </CardFooter>
             </form>
           </Card>
         </Panel>

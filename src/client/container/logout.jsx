@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Panel, Card, Row, Spacer, Checkbox } from '../controls';
+import { Panel, Card, CardHeader, CardContent, CardFooter, Spacer, Checkbox, Button } from '../controls';
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
 
@@ -24,11 +24,14 @@ class LogoutPage extends React.Component {
         <Panel>
           <Card>
             <form onSubmit={this.onSubmit.bind(this)}>
-              <Checkbox label='Yes, log me out' required />
-              <Row>
+              <CardHeader>Logout</CardHeader>
+              <CardContent>
+                <Checkbox label='Yes, log me out' required />
+              </CardContent>
+              <CardFooter>
                 <Spacer />
-                <button type='submit'>Logout</button>
-              </Row>
+                <Button type='submit'>Logout</Button>
+              </CardFooter>
             </form>
           </Card>
         </Panel>

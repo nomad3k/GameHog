@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Panel, Button, Card, Checkbox, Row, Spacer } from '../controls';
+import { Panel, Button, Card, CardHeader, CardContent, CardFooter,
+  Checkbox, Row, Spacer } from '../controls';
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
 
@@ -24,11 +25,14 @@ class LogoutPage extends React.Component {
         <Panel className='gh-unregister'>
           <Card>
             <form onSubmit={this.onSubmit.bind(this)}>
-              <Checkbox label='Yes, delete my account' required />
-              <Row>
+              <CardHeader>Unregister</CardHeader>
+              <CardContent>
+                <Checkbox label='Yes, delete my account' required />
+              </CardContent>
+              <CardFooter>
                 <Spacer />
                 <Button type='submit'>Unregister</Button>
-              </Row>
+              </CardFooter>
             </form>
           </Card>
         </Panel>
