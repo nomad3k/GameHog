@@ -1,37 +1,122 @@
-.gh-validation {
-  display: none;
+$radius: 5px;
+
+.gh-panel {
+  width: 480px;
+  margin: 0 auto;
 }
 
-.gh-validation--fail {
-  color: red;
-  display: inline;
+.gh-section {
+  margin: $gutter 0 $gutter 0;
+  padding: $gutter 0 $gutter 0;
 }
 
-button, input {
-  font-size: 16px;
-}
-
-textarea,
-input[type=text],
-input[type=password] {
-  margin: 4px;
-  padding: 4px;
-  width: calc(100% - 10px);
-}
-
-button {
-  border-style: none;
-  border-radius: 4px;
-  padding: 8px;
-}
-
-.gh-errors {
-  margin: 0;
-}
-.gh-errors__item {
-  color: hsla(0, 100%, 40%, 1);
+.gh-link {
+  cursor: pointer;
+  font-size: 18px;
+  color: $color-primary-3;
+  height: 40px;
+  padding: 10px 10px;
 }
 
 .gh-button {
+  background-color: $color-secondary-2-0;
+  color: white;
+  height: 40px;
+  min-width: 80px;
+  border: none;
+  border-radius: $radius;
+  font-size: 18px;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+.gh-button:hover {
+  background-color: $color-secondary-2-0;
+}
 
+.gh-textfield {
+  position: relative;
+  border-width: 1px;
+  border-style: solid;
+  border-color: $color-primary-3;
+  background-color: white;
+  padding: $gutter;
+  display: flex;
+  flex-direction: row;
+}
+.gh-section > .gh-textfield {
+  border-width: 0 1px 1px 1px;
+}
+.gh-section > div:first-of-type.gh-textfield {
+  border-width: 1px;
+  border-radius: $radius $radius 0 0;
+}
+.gh-section > div:last-of-type.gh-textfield {
+  border-radius: 0 0 $radius $radius;
+}
+
+.gh-textfield__input {
+  border: none;
+  width: 100%;
+  font-size: 18px;
+  color: $color-primary-0;
+}
+.gh-textfield__input:focus {
+  outline: none;
+}
+.gh-textfield__input::placeholder {
+  color: $color-primary-1;
+}
+
+// ---------------------------------------------------------------------------
+// Description text
+// ---------------------------------------------------------------------------
+
+.gh-textfield__errors {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.gh-textfield__errors li {
+  display: inline-block;
+  color: red;
+}
+.gh-textfield__errors li::before {
+  content: '|';
+  color: $color-primary-1;
+  margin: 0 4px 0 4px;
+}
+.gh-textfield__errors li:first-child::before {
+  content: ''
+}
+
+// ---------------------------------------------------------------------------
+// Description text
+// ---------------------------------------------------------------------------
+
+.gh-textfield__description {
+  text-align: right;
+  font-size: 14px;
+  font-style: italic;
+  color: $color-primary-2;
+}
+
+// ---------------------------------------------------------------------------
+// Indicators
+// ---------------------------------------------------------------------------
+
+.gh-textfield__indicators > * {
+  margin-left: 4px;
+}
+.gh-textfield__indicator--has-errors {
+  font-size: 18px;
+  color: red;
+}
+.gh-textfield__indicator--is-required {
+  font-size: 18px;
+  color: red;
+}
+.gh-section__footer {
+  font-style: italic;
+  color: $color-primary-2;
+  margin: $gutter 0 0 0;
 }

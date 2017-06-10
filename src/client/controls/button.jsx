@@ -15,9 +15,9 @@ export default class Button extends React.Component {
   render() {
     const { type, className, style, onClick } = this.props;
     const c = classnames('gh-button', className);
-    const attributes = { type, className, style, onClick };
+    const attributes = { className: c, type, style, onClick };
     return (
-      <button className={c} {...attributes}>
+      <button {...attributes}>
         {this.props.children}
       </button>
     );

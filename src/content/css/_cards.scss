@@ -1,12 +1,31 @@
 .gh-card {
-  margin: 16px;
-  padding: 16px;
-  border-radius: 2px;
-  box-shadow: 4px 4px 10px #eeeeee;
-  border: solid 1px #cccccc;
+  background-color: $color-primary-1;
+  border: solid 1px $color-primary-0;
+  border-radius: 4px;
+  box-shadow: 1px 4px 8px rgba(0,0,0,0.5);
+  margin: $gutter*2;
 }
 
-.gh-panel {
-  width: 400px;
-  margin: 0 auto;
+.gh-card__header,
+.gh-card__content,
+.gh-card__footer {
+  margin: 0;
+  padding: $gutter*2;
+}
+
+.gh-card__header {
+  background-color: $color-primary-3;
+  color: $color-primary-1;
+  font-size: 24px;
+  padding-left: $gutter*2;
+  padding-right: $gutter*2;
+}
+
+.gh-card__content {
+
+}
+
+.gh-card__footer {
+  display: flex;
+  flex-direction: row;
 }
