@@ -1,4 +1,8 @@
 html, body {
+  background-color: #fafcff;
+  color: 444444; }
+
+html, body {
   margin: 0;
   padding: 0;
   font-family: helvetica neue, helvetica, arial, sans-serif;
@@ -45,8 +49,8 @@ html, body {
   margin: 0 auto; }
 
 .gh-section {
-  margin: 8px 0 8px 0;
-  padding: 8px 0 8px 0; }
+  margin: 0;
+  padding: 8px; }
 
 .gh-link {
   cursor: pointer;
@@ -63,7 +67,7 @@ html, body {
   border: none;
   border-radius: 5px;
   font-size: 18px;
-  padding: 10px 20px;
+  padding: 8px 16px;
   cursor: pointer; }
 
 .gh-button:hover {
@@ -147,11 +151,15 @@ html, body {
   box-shadow: 1px 4px 8px rgba(0, 0, 0, 0.5);
   margin: 16px; }
 
-.gh-card__header,
 .gh-card__content,
+.gh-card__header,
 .gh-card__footer {
   margin: 0;
-  padding: 16px; }
+  padding: 8px; }
+
+.gh-card__header > *,
+.gh-card__footer > * {
+  margin: 8px; }
 
 .gh-card__header {
   background-color: #643300;
@@ -161,6 +169,7 @@ html, body {
   padding-right: 16px; }
 
 .gh-card__footer {
+  border-top: solid 1px #C79662;
   display: flex;
   flex-direction: row; }
 

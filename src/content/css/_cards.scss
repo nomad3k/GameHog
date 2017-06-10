@@ -6,11 +6,15 @@
   margin: $gutter*2;
 }
 
-.gh-card__header,
 .gh-card__content,
+.gh-card__header,
 .gh-card__footer {
   margin: 0;
-  padding: $gutter*2;
+  padding: $gutter;
+}
+.gh-card__header > *,
+.gh-card__footer > * {
+  margin: $gutter;
 }
 
 .gh-card__header {
@@ -26,6 +30,7 @@
 }
 
 .gh-card__footer {
+  border-top: solid 1px $color-primary-2;
   display: flex;
   flex-direction: row;
 }

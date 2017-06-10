@@ -6,8 +6,8 @@ $radius: 5px;
 }
 
 .gh-section {
-  margin: $gutter 0 $gutter 0;
-  padding: $gutter 0 $gutter 0;
+  margin: 0;
+  padding: $gutter;
 }
 
 .gh-link {
@@ -26,7 +26,7 @@ $radius: 5px;
   border: none;
   border-radius: $radius;
   font-size: 18px;
-  padding: 10px 20px;
+  padding: $gutter $gutter*2;
   cursor: pointer;
 }
 .gh-button:hover {
