@@ -14,7 +14,7 @@ export default function reducer(state = initialState, action) {
     case Types.SOCKET_CONNECT:
       return state;
 
-    case Types.SOCKET_CONNECT_SUCCESS:{
+    case Types.SOCKET_CONNECT_SUCCESS: {
       return update(state, {
         socket: { $set: action.socket }
       });

@@ -6,19 +6,19 @@ class ArgumentRequiredError extends Error {
   }
 }
 
-export function clientConnected(client) {
-  if (!client) throw new ArgumentRequiredError('client');
+export function clientConnected({ id }) {
+  if (!id) throw new ArgumentRequiredError('id');
   return {
     type: Types.CLIENT_CONNECTED,
-    id: client.id
+    id
   };
 }
 
-export function clientDisconnected(client) {
-  if (!client) throw new ArgumentRequiredError('client');
+export function clientDisconnected({ id }) {
+  if (!id) throw new ArgumentRequiredError('id');
   return {
     type: Types.CLIENT_DISCONNECTED,
-    id: client.id
+    id
   };
 }
 
