@@ -4,24 +4,25 @@ import validate from 'validation-unchained';
 // import uuid from 'uuid/v4';
 
 // import * as Types from './store/types';
+import * as State from '../shared/store/state';
 import * as Actions from '../shared/store/actions';
 import * as Events from '../shared/events';
-import { ok, authRequired, anonRequired, notImplemented } from './responses';
+import { ok, badRequest, invalidRequest, invalidOperation, authRequired, anonRequired, notImplemented } from './responses';
 
 export function connect(store) {
   return function(client) {
 
     client.on_auth = function(message, handler) {
       client.on(message, function(args, callback) {
-        if (!client.user) callback(authRequired());
-        handler(args, callback);
+        if (!client.user) return callback(authRequired());
+        handler(client.user, args, callback);
       });
     };
 
     client.on_anon = function(message, handler) {
       client.on(message, function(args, callback)
       {
-        if (client.user) callback(anonRequired());
+        if (client.user) return callback(anonRequired());
         handler(args, callback);
       });
     };
@@ -48,10 +49,24 @@ export function connect(store) {
     });
 
     // ------------------------------------------------------------------------
-    // Authentication
+    // AUTH_REGISTER
     // ------------------------------------------------------------------------
 
-    client.on_anon(Events.AUTH_REGISTER, function({ userName, password, playerName, characterName }, callback) {
+    client.on_anon(Events.AUTH_REGISTER, function(args, callback) {
+      const { errors, data } = validate(args, {
+        strict: true,
+        rules: {
+          userName: { type: String, required: true },
+          password: { type: String, required: true, length: { min: 6, max: 255 } },
+          playerName: { type: String, required: true },
+          characterName: { type: String, required: true }
+        }
+      });
+      if (errors) return callback(badRequest(errors));
+      const { userName, password, playerName, characterName } = data;
+      const user = store.getState().shared.getIn([State.USERS, userName]);
+      if (user) return callback(invalidOperation({ userName: ['User exists.'] }));
+
       const pr = Actions.playerRegistered({
         userName, playerName, characterName
       });
@@ -60,47 +75,64 @@ export function connect(store) {
       });
       store.dispatch(ur);
       store.dispatch(pr);
-      client.emit(Events.Event, pr);
-      client.broadcast.emit(Events.Event, pr);
+      client.emit(Events.EVENT, pr);
+      client.broadcast.emit(Events.EVENT, pr);
       callback(ok());
     });
 
-    client.on_auth('auth:unregister', function(args, callback) {
+    // -------------------------------------------------------------------------
+    // AUTH_UNREGISTER
+    // -------------------------------------------------------------------------
+
+    client.on_auth(Events.AUTH_UNREGISTER, function(user, args, callback) {
+      const uu = Actions.userUnregistered({ userName: user.userName });
+      const pu = Actions.playerUnregistered({ userName: user.userName });
+      delete client.user;
+      store.dispatch(uu);
+      store.dispatch(pu);
+      client.emit(Events.EVENT, pu);
+      client.broadcast.emit(Events.EVENT, pu);
+      callback(ok());
     });
 
-    client.on_anon('auth:login', function(args, callback) {
+    // -------------------------------------------------------------------------
+    // AUTH_LOGIN
+    // -------------------------------------------------------------------------
+
+    client.on_anon(Events.AUTH_LOGIN, function(args, callback) {
+      const { errors, data } = validate(args, {
+        strict: true,
+        rules: {
+          userName: { type: String, required: true },
+          password: { type: String, required: true }
+        }
+      });
+      if (errors) {
+        return callback(badRequest(errors));
+      }
+      const user = store.getState().shared.getIn([State.USERS, data.userName]);
+      if (!user || user.get('password') != data.password) {
+        return callback(invalidRequest({ userName: ['Unknown Username or Password'] }));
+      }
+      client.user = { userName: data.userName };
+      const e = Actions.playerConnected({ userName: data.userName });
+      store.dispatch(e);
+      client.emit(Events.EVENT, e);
+      client.broadcast.emit(Events.EVENT, e);
+      callback(ok(client.user));
     });
 
-    client.on_auth('auth:logout', function(args, callback) {
-    });
+    // -------------------------------------------------------------------------
+    // AUTH_LOGOUT
+    // -------------------------------------------------------------------------
 
-    // ------------------------------------------------------------------------
-    // Game Management
-    // ------------------------------------------------------------------------
-
-    client.on_auth('game:list', function(args, callback) {
-    });
-
-    client.on_auth('game:select', function(args, callback) {
-    });
-
-    client.on_auth('game:open', function(args, callback) {
-    });
-
-    client.on_auth('game:close', function(args, callback) {
-    });
-
-    client.on_auth('game:create', function(args, callback) {
-    });
-
-    client.on_auth('game:delete', function(args, callback) {
-    });
-
-    // ------------------------------------------------------------------------
-    // Event Pub/Sub
-    // ------------------------------------------------------------------------
-
-    client.on_auth('event:publish', function(args, callback) {
+    client.on_auth(Events.AUTH_LOGOUT, function(user, args, callback) {
+      const pd = Actions.playerDisconnected({ userName: user.userName });
+      delete client.user;
+      store.dispatch(pd);
+      client.emit(Events.EVENT, pd);
+      client.broadcast.emit(Events.EVENT, pd);
+      callback(ok());
     });
 
   }

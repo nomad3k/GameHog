@@ -31,6 +31,14 @@ export function userRegistered({ userName, password }) {
   };
 }
 
+export function userUnregistered({ userName }) {
+  if (!userName) throw new ArgumentRequiredError('userName');
+  return {
+    type: Types.USER_UNREGISTERED,
+    userName
+  };
+}
+
 export function playerRegistered({ userName, playerName, characterName }) {
   if (!userName) throw new ArgumentRequiredError('userName');
   if (!playerName) throw new ArgumentRequiredError('playerName');
@@ -39,4 +47,28 @@ export function playerRegistered({ userName, playerName, characterName }) {
     type: Types.PLAYER_REGISTERED,
     userName, playerName, characterName
   };
+}
+
+export function playerUnregistered({ userName }) {
+  if (!userName) throw new ArgumentRequiredError('userName');
+  return {
+    type: Types.PLAYER_UNREGISTERED,
+    userName
+  };
+}
+
+export function playerConnected({ userName }) {
+  if (!userName) throw new ArgumentRequiredError('userName');
+  return {
+    type: Types.PLAYER_CONNECTED,
+    userName
+  }
+}
+
+export function playerDisconnected({ userName }) {
+  if (!userName) throw new ArgumentRequiredError('userName');
+  return {
+    type: Types.PLAYER_DISCONNECTED,
+    userName
+  }
 }

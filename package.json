@@ -12,6 +12,7 @@
     "style:watch": "npm run style -- --watch",
     "test": "mocha --compilers js:babel-register --compilers jsx:babel-register src/tests/**/*.test.js --recursive",
     "test:watch": "npm run test -- --watch --growl",
+    "test:debug": "npm run test -- --inspect --debug-brk",
     "dist": "npm run dist:copy & npm run dist:pack",
     "dist:pack": "webpack --config ./src/cfg/webpack.config.dist.js",
     "dist:copy": "copyfiles -u 1 src/content/* src/content/**/* ./dist"
@@ -43,6 +44,7 @@
     "babel-core": "^6.24.1",
     "babel-eslint": "^7.2.2",
     "babel-loader": "^6.4.1",
+    "babel-polyfill": "^6.23.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.0.15",
     "babel-preset-stage-0": "^6.24.1",

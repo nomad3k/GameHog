@@ -4,66 +4,71 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
+import { Panel, Card, CardHeader, CardContent, CardFooter, Section,
+  Spacer, Button, Textfield } from '../controls';
+import Template from '../containers/template';
 import * as Actions from '../store/actions';
 
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      username: '',
+      userName: '',
       password: '',
       errors: { }
     }
   }
+
   onSubmit(e) {
     e.preventDefault();
-    this.props.actions.login({
-      username: this.state.username,
-      password: this.state.password
-    }, response => {
-      if (response.ok) {
-        alert('Success');
-      } else {
-        this.setState({ errors: response.errors })
-      }
-    });
+    const { actions, history } = this.props;
+    const { userName, password } = this.state;
+    actions.login({ userName, password })
+      .then(() => {
+        history.push('/');
+      })
+      .catch(errors => {
+        this.setState({ errors });
+      })
   }
+
   render() {
     return (
-      <div className='gh-login'>
-        <form onSubmit={this.onSubmit.bind(this)}>
-          <div>
-            <input type='text'
-                   placeholder='Username'
-                   value={this.state.username}
-                   onChange={e => this.setState({ username: e.target.value })}
-                   autoFocus
-                   required />
-            <span className='gh-validation--fail'>{this.state.errors.username}</span>
-          </div>
-          <div>
-            <input type='password'
-                   placeholder='Password'
-                   value={this.state.password}
-                   onChange={e => this.setState({ password: e.target.value })}
-                   required />
-            <span className='gh-validation--fail'>{this.state.errors.password}</span>
-          </div>
-          <div>
-            <button type='submit'>Login</button>
-            <div className='gh-menu'>
-              <Link to='/register'>Register</Link>
-              <Link to='/logout'>Logout</Link>
-              <Link to='/'>Home</Link>
-            </div>
-          </div>
-        </form>
-      </div>
+      <Template title='Login'>
+        <Panel>
+          <Card>
+            <form onSubmit={this.onSubmit.bind(this)}>
+              <CardHeader>Login</CardHeader>
+              <CardContent>
+                <Section>
+                  <Textfield label='Username'
+                             value={this.state.userName}
+                             onChange={e => this.setState({ userName: e.target.value })}
+                             errors={this.state.errors.userName}
+                             autoFocus
+                             required />
+                  <Textfield type='password'
+                             label='Password'
+                             value={this.state.password}
+                             onChange={e => this.setState({ password: e.target.value })}
+                             errors={this.state.errors.password}
+                             required />
+                </Section>
+              </CardContent>
+              <CardFooter>
+                <Link className='gh-link' to='/register'>Register</Link>
+                <Spacer />
+                <Button type='submit'>Login</Button>
+              </CardFooter>
+            </form>
+          </Card>
+        </Panel>
+      </Template>
     );
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(_state) {
   return {
   };
 }

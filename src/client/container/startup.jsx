@@ -3,29 +3,26 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import Template from '../containers/template';
 import * as Actions from '../store/actions';
 
-class Homepage extends React.Component {
+class Startup extends React.Component {
   static propTypes = {
-    identity: PropTypes.object,
-    players: PropTypes.object,
-    documents: PropTypes.object
+    socket: PropTypes.object
+  }
+  componentDidMount() {
+    const { actions } = this.props;
+    actions.connectSocket();
   }
   render() {
-    return (
-      <Template title='Homepage'>
-        <p>Homepage</p>
-      </Template>
-    );
+    return this.props.socket
+      ? this.props.children
+      : (<p>Loading...</p>);
   }
 }
 
 function mapStateToProps(state) {
   return {
-    identity: state.identity,
-    players: state.players,
-    documents: state.documents
+    socket: state.client.socket
   };
 }
 
@@ -38,4 +35,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Homepage);
+)(Startup);

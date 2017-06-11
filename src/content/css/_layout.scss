@@ -17,11 +17,23 @@ html, body {
   height: 100%;
 }
 
+.gh-layout--expand {
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+
+.gh-layout--fixed {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
 .gh-layout--row {
+  width: 100%;
   display: flex;
   flex-direction: row;
 }
 .gh-layout--column {
+  width: 100%;
   display: flex;
   flex-direction: column;
 }
