@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
@@ -17,8 +18,18 @@ class LoginPage extends React.Component {
       errors: { }
     }
   }
+
   onSubmit(e) {
     e.preventDefault();
+    const { actions, history } = this.props;
+    const { userName, password } = this.state;
+    actions.login({ userName, password })
+      .then(() => {
+        history.push('/');
+      })
+      .catch(errors => {
+        this.setState({ errors });
+      })
   }
 
   render() {
@@ -31,9 +42,9 @@ class LoginPage extends React.Component {
               <CardContent>
                 <Section>
                   <Textfield label='Username'
-                             value={this.state.username}
-                             onChange={e => this.setState({ username: e.target.value })}
-                             errors={this.state.errors.username}
+                             value={this.state.userName}
+                             onChange={e => this.setState({ userName: e.target.value })}
+                             errors={this.state.errors.userName}
                              autoFocus
                              required />
                   <Textfield type='password'

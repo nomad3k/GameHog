@@ -120,7 +120,7 @@ html, body {
   margin: 0 4px 0 4px; }
 
 .gh-textfield__errors li:first-child::before {
-  content: ""; }
+  display: none; }
 
 .gh-textfield__description {
   text-align: right;

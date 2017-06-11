@@ -1,10 +1,11 @@
 import * as ResponseCode from '../shared/response-code';
 
-export function ok() {
+export function ok(data) {
   return {
     ok: true,
     code: ResponseCode.OK,
-    message: 'OK'
+    message: 'OK',
+    data
   };
 }
 
@@ -17,7 +18,7 @@ export function authRequired(errors) {
   };
 }
 
-export function anonRequire(errors) {
+export function anonRequired(errors) {
   return {
     ok: false,
     code: ResponseCode.ANON_REQUIRED,

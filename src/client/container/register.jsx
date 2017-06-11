@@ -17,13 +17,21 @@ class RegisterPage extends React.Component {
       playerName: '',
       characterName: '',
       errors: {
-        userName: ['xxx','yyy']
       }
     };
   }
 
   onSubmit(e) {
     e.preventDefault();
+    const { actions } = this.props;
+    const { userName, password, confirmPassword, playerName, characterName } = this.state;
+    actions.register({ userName, password, confirmPassword, playerName, characterName })
+      .then(() => {
+        this.props.history.push('/login');
+      })
+      .catch(errors => {
+        this.setState({ errors });
+      });
   }
 
   render() {

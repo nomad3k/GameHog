@@ -1,9 +1,16 @@
+import { fromJS } from 'immutable';
 import { Map } from 'immutable';
 
 import * as Types from './types';
 import * as State from './state';
 
-export default function reducer(state = State.initialState, action) {
+export const initialState = fromJS({
+  [State.CLIENTS]: { },
+  [State.USERS]: { },
+  [State.PLAYERS]: { }
+});
+
+export default function reducer(state = initialState, action) {
   switch (action.type) {
 
     case Types.CLIENT_CONNECTED:

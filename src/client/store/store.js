@@ -10,11 +10,11 @@ const loggerMiddleware = createLogger();
 export default function configureStore(initialState) {
   const store = createStore(
     combineReducers({ client, shared }),
-    initialState,
     applyMiddleware(
       thunkMiddleware,
       loggerMiddleware
-    )
+    ),
+    initialState
   );
 
   return store;

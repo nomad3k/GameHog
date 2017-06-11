@@ -8,6 +8,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import Startup from './container/startup';
 import Homepage from './container/homepage';
 import LoginPage from './container/login';
 import LogoutPage from './container/logout';
@@ -21,16 +22,18 @@ const store = createStore();
 
 ReactDOM.render(
   <Provider store={store}>
-    <Router>
-      <Switch>
-        <Route exact path='/' component={Homepage} />
-        <Route exact path='/login' component={LoginPage} />
-        <Route exact path='/logout' component={LogoutPage} />
-        <Route exact path='/register' component={RegisterPage} />
-        <Route exact path='/unregister' component={UnregisterPage} />
-        <Route component={NotFound} />
-      </Switch>
-    </Router>
+    <Startup>
+      <Router>
+        <Switch>
+          <Route exact path='/' component={Homepage} />
+          <Route exact path='/login' component={LoginPage} />
+          <Route exact path='/logout' component={LogoutPage} />
+          <Route exact path='/register' component={RegisterPage} />
+          <Route exact path='/unregister' component={UnregisterPage} />
+          <Route component={NotFound} />
+        </Switch>
+      </Router>
+    </Startup>
   </Provider>,
   document.getElementById('app')
 );

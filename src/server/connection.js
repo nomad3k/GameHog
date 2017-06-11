@@ -104,7 +104,7 @@ export function connect(store) {
       store.dispatch(e);
       client.emit(Events.EVENT, e);
       client.broadcast.emit(Events.EVENT, e);
-      callback(ok());
+      callback(ok(client.user));
     });
 
     // -------------------------------------------------------------------------
