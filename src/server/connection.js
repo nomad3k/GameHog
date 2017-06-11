@@ -81,6 +81,21 @@ export function connect(store) {
     });
 
     // -------------------------------------------------------------------------
+    // AUTH_UNREGISTER
+    // -------------------------------------------------------------------------
+
+    client.on_auth(Events.AUTH_UNREGISTER, function(user, args, callback) {
+      const uu = Actions.userUnregistered({ userName: user.userName });
+      const pu = Actions.playerUnregistered({ userName: user.userName });
+      delete client.user;
+      store.dispatch(uu);
+      store.dispatch(pu);
+      client.emit(Events.EVENT, pu);
+      client.broadcast.emit(Events.EVENT, pu);
+      callback(ok());
+    });
+
+    // -------------------------------------------------------------------------
     // AUTH_LOGIN
     // -------------------------------------------------------------------------
 

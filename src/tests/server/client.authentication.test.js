@@ -426,4 +426,67 @@ describe('Client:Authentication', function() {
       expect(store.getState().shared.toJS()).to.deep.equal(initialState);
     });
   });
+
+  // ---------------------------------------------------------------------------
+  // Logout - Fail: Not logged in
+  // ---------------------------------------------------------------------------
+
+  describe('Unregister - Success', function() {
+    const userName = 'xxx', password = 'yyy';
+
+    const { client, store } = setup(function*() {
+      yield Actions.userRegistered({ userName, password });
+      yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
+    });
+
+    let response = null;
+    before(function(done) {
+      client.trigger(Events.AUTH_LOGIN, {
+        userName,
+        password
+      }, _r => {
+        client.clear();
+        client.broadcast.clear();
+        client.trigger(Events.AUTH_UNREGISTER, {
+        }, r2 => {
+          response = r2;
+          done();
+        });
+      });
+    });
+
+    it('should register the handlers', function() {
+      expect(client.handlers[Events.AUTH_UNREGISTER]).to.exist;
+    });
+
+    it('should remove the client.user', function() {
+      expect(client.user).to.not.exist;
+    });
+
+    it('should respond to the subject', function() {
+      expect(response).to.exist;
+      expect(response.ok).to.be.true;
+      expect(response.code).to.equal(ResponseCodes.OK);
+    });
+
+    it('should amend state', function() {
+      const state = store.getState().shared;
+      const user = state.getIn([State.USERS, userName]);
+      const player = state.getIn([State.PLAYERS, userName]);
+      expect(user).to.not.exist;
+      expect(player).to.not.exist;
+    });
+
+    it('should notify the subject', function() {
+      const args = client.getArgsForSingleEvent(Events.EVENT);
+      expect(args).to.exist;
+      expect(args.type).to.equal(Types.PLAYER_UNREGISTERED);
+    });
+
+    it('should notify observers', function() {
+      const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
+      expect(args).to.exist;
+      expect(args.type).to.equal(Types.PLAYER_UNREGISTERED);
+    });
+  });
 });

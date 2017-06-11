@@ -7,16 +7,16 @@ import { Row, Column } from './index';
 export default class Textfield extends Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
+    value: PropTypes.any.isRequired,
+    onChange: PropTypes.func.isRequired,
     maxLength: PropTypes.number.isRequired,
     description: PropTypes.string,
     label: PropTypes.string,
-    value: PropTypes.any,
-    onChange: PropTypes.func,
     required: PropTypes.bool,
     autoFocus: PropTypes.bool,
+    errors: PropTypes.array,
     className: PropTypes.string,
-    style: PropTypes.object,
-    errors: PropTypes.array
+    style: PropTypes.object
   }
 
   static defaultProps = {
@@ -28,7 +28,8 @@ export default class Textfield extends Component {
     const { description, type, maxLength, label, value, onChange, required, autoFocus, className, style, errors } = this.props;
     const attributes = { type, maxLength, placeholder: label, value, onChange, required, autoFocus };
     const c = classnames('gh-textfield', {
-      'has-errors': errors && errors.length > 0
+      'has-errors': errors && errors.length > 0,
+      'is-required': required
     }, className);
     return (
       <div className={c} style={style}>

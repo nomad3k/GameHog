@@ -16,6 +16,11 @@ class LogoutPage extends React.Component {
 
   onSubmit(e) {
     e.preventDefault();
+    this.props.actions.logout()
+      .then(() => this.props.history.push('/login'))
+      .catch(errors => {
+        alert(JSON.stringify(errors));
+      });
   }
 
   render() {

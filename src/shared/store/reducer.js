@@ -30,11 +30,25 @@ export default function reducer(state = initialState, action) {
       );
     }
 
+    case Types.USER_UNREGISTERED: {
+      const { userName } = action;
+      return state.deleteIn(
+        [State.USERS, userName],
+      );
+    }
+
     case Types.PLAYER_REGISTERED: {
       const { userName, playerName, characterName } = action;
       return state.setIn(
         [State.PLAYERS, userName ],
         Map({ playerName, characterName, connected: false })
+      );
+    }
+
+    case Types.PLAYER_UNREGISTERED: {
+      const { userName } = action;
+      return state.deleteIn(
+        [State.PLAYERS, userName],
       );
     }
 

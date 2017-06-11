@@ -5,11 +5,23 @@ import * as Events from '../../shared/events';
 
 let socket = null;
 
-function connect(callback) {
+function connect(dispatch, callback) {
   socket = new io();
+
   socket.on('connect', function() {
+    console.log('socket.connect');
     callback(socket);
   });
+
+  socket.on(Events.SYSTEM, arg => {
+    console.log('SYSTEM', arg);
+  });
+
+  socket.on(Events.EVENT, event => {
+    console.log('EVENT', event);
+    dispatch(event);
+  });
+
 }
 
 export function connectSocket() {
@@ -17,7 +29,7 @@ export function connectSocket() {
     dispatch({
       type: Types.SOCKET_CONNECT
     });
-    connect(function(socket) {
+    connect(dispatch, function(socket) {
       dispatch({
         type: Types.SOCKET_CONNECT_SUCCESS,
         socket
@@ -33,6 +45,7 @@ export function login({ userName, password }) {
     return new Promise((resolve, reject) => {
       if (!socket) return reject({ ok: false, message: 'Socket not initialised' });
       socket.emit(Events.AUTH_LOGIN, { userName, password }, response => {
+        console.log('AUTH_LOGIN', response);
         if (response && response.ok) {
           dispatch({
             type: Types.LOGIN,
@@ -47,10 +60,26 @@ export function login({ userName, password }) {
   }
 }
 
+export function logout() {
+  return dispatch => new Promise((resolve, reject) => {
+    if (!socket) return reject({ ok: false, message: 'Socket not initialised' });
+    socket.emit(Events.AUTH_LOGOUT, { }, response => {
+      if (response && response.ok) {
+        dispatch({
+          type: Types.LOGOUT
+        });
+        resolve(response);
+      } else {
+        reject(response.errors);
+      }
+    });
+  });
+}
+
 export function register({ userName, password, confirmPassword, playerName, characterName }) {
   if (!userName) throw new Error('Missing parameter: userName');
   if (!password) throw new Error('Missing parameter: password');
-  return dispatch => {
+  return _dispatch => {
     return new Promise((resolve, reject) => {
       if (!socket) return reject({ ok: false, message: 'Socket not initialised' });
       socket.emit(Events.AUTH_REGISTER, {
@@ -66,7 +95,21 @@ export function register({ userName, password, confirmPassword, playerName, char
   }
 }
 
-
+export function unregister() {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      if (!socket) return reject({ ok: false, message: 'Socket not initialised' });
+      socket.emit(Events.AUTH_UNREGISTER, { }, response => {
+        if (response && response.ok) {
+          dispatch({ type: Types.LOGOUT });
+          resolve(response);
+        } else {
+          reject(response.errors);
+        }
+      });
+    });
+  }
+}
 
 export function socketConnected() {
 }
