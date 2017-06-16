@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
-import { Section, SectionFooter, Panel, Card, CardHeader, CardContent, CardFooter, Spacer, Button, Textfield } from '../controls';
+import { Textfield } from 'controls-unchained/lib';
+import { Section, SectionFooter, Panel, Card, CardHeader, CardContent, CardFooter, Spacer, Button } from '../controls';
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
 
@@ -16,8 +17,7 @@ class RegisterPage extends React.Component {
       confirmPassword: '',
       playerName: '',
       characterName: '',
-      errors: {
-      }
+      errors: { }
     };
   }
 
@@ -44,6 +44,7 @@ class RegisterPage extends React.Component {
               <CardContent>
                 <Section>
                   <Textfield label='Username'
+                             name='Username'
                              maxLength={20}
                              value={this.state.userName}
                              description='Provide a unique username'
@@ -65,11 +66,11 @@ class RegisterPage extends React.Component {
                              onChange={e => this.setState({ confirmPassword: e.target.value })}
                              errors={this.state.errors.confirmPassword}
                              required />
-                  <SectionFooter>
-                    Please remember the details above, as you will need
-                    them each time you connect to this game
-                  </SectionFooter>
                 </Section>
+                <SectionFooter>
+                  Please remember the details above, as you will need
+                  them each time you connect to this game
+                </SectionFooter>
                 <Section>
                   <Textfield label='Player Name'
                              maxLength={255}
@@ -83,10 +84,10 @@ class RegisterPage extends React.Component {
                              onChange={e => this.setState({ characterName: e.target.value })}
                              errors={this.state.errors.characterName}
                              required />
-                  <SectionFooter>
-                    How will you be identified by the other players in the game.
-                  </SectionFooter>
                 </Section>
+                <SectionFooter>
+                  How will you be identified by the other players in the game.
+                </SectionFooter>
               </CardContent>
               <CardFooter>
                 <Link className='gh-link' to='/login'>Login</Link>

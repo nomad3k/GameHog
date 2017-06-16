@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
+import { Textfield } from 'controls-unchained/lib';
 import { Panel, Card, CardHeader, CardContent, CardFooter, Section,
-  Spacer, Button, Textfield } from '../controls';
+  Spacer, Button } from '../controls';
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
 

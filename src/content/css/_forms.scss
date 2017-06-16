@@ -33,16 +33,6 @@ $radius: 5px;
   background-color: $color-secondary-2-0;
 }
 
-.gh-textfield {
-  position: relative;
-  border-width: 1px;
-  border-style: solid;
-  border-color: $color-primary-3;
-  background-color: white;
-  padding: $gutter;
-  display: flex;
-  flex-direction: row;
-}
 .gh-section > .gh-textfield {
   border-width: 0 1px 1px 1px;
 }
