@@ -6,7 +6,6 @@ export { default as Section } from './section';
 export { default as SectionFooter } from './section-footer';
 
 export { default as Button } from './button';
-export { default as Checkbox } from './checkbox';
 
 export { default as Card } from './card/card';
 export { default as CardHeader } from './card/card-header';

@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 
-import { Panel, Button, Card, CardHeader, CardContent, CardFooter,
-  Checkbox, Spacer } from '../controls';
+import { Checkbox } from 'controls-unchained';
+import { Panel, Button, Card, CardHeader, CardContent, CardFooter, Spacer } from '../controls';
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
 
