@@ -10,8 +10,6 @@ import { Panel, Section,
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
 
-console.log('>>>>', Card);
-
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
@@ -44,13 +42,15 @@ class LoginPage extends React.Component {
               <CardHeader>Login</CardHeader>
               <CardContent>
                 <Section>
-                  <Textfield label='Username'
+                  <Textfield name='userName'
+                             label='Username'
                              value={this.state.userName}
                              onChange={e => this.setState({ userName: e.target.value })}
                              errors={this.state.errors.userName}
                              autoFocus
                              required />
-                  <Textfield type='password'
+                  <Textfield name='password'
+                             type='password'
                              label='Password'
                              value={this.state.password}
                              onChange={e => this.setState({ password: e.target.value })}

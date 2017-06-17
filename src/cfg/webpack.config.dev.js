@@ -49,11 +49,11 @@ module.exports = {
         loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded'
       },
       {
-        test: /\.(png|jpg|gif|woff|woff2)$/,
+        test: /\.(png|jpg|gif|eot|ttf|woff|woff2)(\?.*)?$/,
         loader: 'url-loader?limit=8192'
       },
       {
-        test: /\.(mp4|ogg|svg)$/,
+        test: /\.(mp4|ogg|svg)(\?.*)?$/,
         loader: 'file-loader'
       }
     ]

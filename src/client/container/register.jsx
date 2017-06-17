@@ -43,8 +43,8 @@ class RegisterPage extends React.Component {
               <CardHeader>Player Registration</CardHeader>
               <CardContent>
                 <Section>
-                  <Textfield label='Username'
-                             name='Username'
+                  <Textfield name='Username'
+                             label='Username'
                              maxLength={20}
                              value={this.state.userName}
                              description='Provide a unique username'
@@ -52,16 +52,18 @@ class RegisterPage extends React.Component {
                              errors={this.state.errors.userName}
                              autoFocus
                              required />
-                  <Textfield type='password'
-                             maxLength={255}
+                  <Textfield name='password'
                              label='Password'
+                             type='password'
+                             maxLength={255}
                              value={this.state.password}
                              onChange={e => this.setState({ password: e.target.value })}
                              errors={this.state.errors.password}
                              required />
-                  <Textfield type='password'
-                             maxLength={255}
+                  <Textfield name='password'
                              label='Confirm Password'
+                             type='password'
+                             maxLength={255}
                              value={this.state.confirmPassword}
                              onChange={e => this.setState({ confirmPassword: e.target.value })}
                              errors={this.state.errors.confirmPassword}
