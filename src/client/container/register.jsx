@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
 
-import { Textfield } from 'controls-unchained/lib';
-import { Section, SectionFooter, Panel, Card, CardHeader, CardContent, CardFooter, Spacer, Button } from '../controls';
+import { Textfield, Button, Card, CardHeader, CardContent, CardFooter } from 'controls-unchained';
+import { Section, SectionFooter, Panel, Spacer } from '../controls';
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
 
