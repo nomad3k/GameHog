@@ -334,6 +334,48 @@ describe('Client:Authentication', function() {
   });
 
   // ---------------------------------------------------------------------------
+  // Login - Fail: Invalid password
+  // ---------------------------------------------------------------------------
+
+  describe('Login - Fail: Already connected', function() {
+    const userName = 'foo';
+    const password = 'bah';
+    const { client, store } = setup(function* () {
+      yield Actions.userRegistered({ userName, password });
+      yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
+    });
+
+    let initialState = null;
+    let response = null;
+    before(function(done) {
+      client.trigger(Events.AUTH_LOGIN, { userName, password }, _r => {
+        client.clear();
+        client.broadcast.clear();
+        initialState = store.getState().shared.toJS();
+        delete client.user;
+        client.trigger(Events.AUTH_LOGIN, { userName, password }, r => {
+          response = r;
+          done();
+        });
+      });
+    });
+
+    it('should respond to client', function() {
+      expect(response).to.exist;
+      expect(response.ok).to.be.false;
+      expect(response.code).to.equal(ResponseCodes.INVALID_REQUEST);
+    });
+
+    it('should not inform the observers', function() {
+      expect(client.broadcast.events).to.be.empty;
+    });
+
+    it('should not amend the state', function() {
+      expect(store.getState().shared.toJS()).to.deep.equal(initialState);
+    });
+  });
+
+  // ---------------------------------------------------------------------------
   // Logout - Success
   // ---------------------------------------------------------------------------
 

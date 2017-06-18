@@ -5,7 +5,9 @@ import { createLogger } from 'redux-logger';
 import client from './reducer';
 import shared from '../../shared/store/reducer';
 
-const loggerMiddleware = createLogger();
+const loggerMiddleware = createLogger({
+  stateTransformer: ({ client, shared }) => ({ client, shared: shared.toJS() })
+});
 
 export default function configureStore(initialState) {
   const store = createStore(
