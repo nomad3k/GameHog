@@ -43,7 +43,7 @@ class RegisterPage extends React.Component {
               <CardHeader>Player Registration</CardHeader>
               <CardContent>
                 <Section>
-                  <Textfield name='Username'
+                  <Textfield name='username'
                              label='Username'
                              maxLength={20}
                              value={this.state.userName}
@@ -74,13 +74,15 @@ class RegisterPage extends React.Component {
                   them each time you connect to this game
                 </SectionFooter>
                 <Section>
-                  <Textfield label='Player Name'
+                  <Textfield name='playerName'
+                             label='Player Name'
                              maxLength={255}
                              value={this.state.playerName}
                              onChange={e => this.setState({ playerName: e.target.value })}
                              errors={this.state.errors.playerName}
                              required />
-                  <Textfield label='Character Name'
+                  <Textfield name='characterName'
+                             label='Character Name'
                              maxLength={255}
                              value={this.state.characterName}
                              onChange={e => this.setState({ characterName: e.target.value })}
