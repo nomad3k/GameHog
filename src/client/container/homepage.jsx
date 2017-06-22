@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { Menu, MenuItem } from 'controls-unchained';
+import { SubHeader, Desktop, Nav, NavItem } from 'react-controls-unchained';
 
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
@@ -16,53 +16,31 @@ class Homepage extends React.Component {
 
   renderPlayers(players) {
     if (!players) return null;
-    const users = Object.getOwnPropertyNames(players);
+    const userNames = Object.getOwnPropertyNames(players);
     const style = {
       transitionDuration: '1s',
       transitionProperty: 'background-color'
     };
     return (
-      <div>
-        {users.map(userName => (
-          <MenuItem className={players[userName].connected ? 'green-bg' : 'red-bg'} style={style}>
+      <Nav>
+        {userNames.map(userName => (
+          <NavItem className={players[userName].connected ? 'green-bg' : 'red-bg'} style={style}>
             {`${players[userName].characterName} (${players[userName].playerName})`}
-          </MenuItem>
+          </NavItem>
         ))}
-      </div>
+      </Nav>
     );
   }
 
   render() {
-    const colors = ['primary', 'secondary', 'tertiary', 'complementary'];
-    const shades = ['-darkest', '-darker', '', '-lighter', '-lightest'];
-    const style = { width: 80, textAlign: 'center' };
+    const { players } = this.props;
     return (
       <Template title='Homepage'>
-        <Menu>
-          {this.renderPlayers(this.props.players)}
-        </Menu>
-        <div id='colors'style={{ backgroundColor: 'white', borderRadius: 10, display: 'inline-block', padding: 10, margin: 10 }}>
-          <table>
-            <thead>
-              <tr>
-                <th></th>
-                {shades.map(s => (
-                  <th key={s}>{s}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {colors.map(c => (
-                <tr key={c}>
-                  <th>{c}</th>
-                  {shades.map(s => (
-                    <td key={s} className={`${c}${s}-bg`} style={style}>x</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <SubHeader>
+          {this.renderPlayers(players)}
+        </SubHeader>
+        <Desktop style={{ flex: '1 1 auto' }}>
+        </Desktop>
       </Template>
     );
   }

@@ -40,7 +40,7 @@ const io = SocketIO(server);
 
 const store = createStore();
 
-io.on('connection', connect(store));
+io.on('connection', connect(store, io));
 
 server.listen(config.port, () => {
   console.log(`Running on http://localhost:${config.port}/`);

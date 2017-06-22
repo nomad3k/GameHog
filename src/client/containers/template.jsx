@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Link } from 'react-router-dom';
-import { Header, Spacer } from 'controls-unchained';
+import { Layout, Header, Main, Spacer, Nav, NavItem } from 'react-controls-unchained';
 
 import * as Actions from '../store/actions';
 
@@ -22,17 +22,28 @@ class Template extends React.Component {
     const { identity, title } = this.props;
     document.title = `${title} - Gamehog`;
     return (
-      <div>
+      <Layout>
         <Header>
-          <Link to='/'>Home</Link>
+          <Nav>
+            <Link to='/'>Home</Link>
+          </Nav>
           <Spacer />
-          { identity ? null : <Link to='/register'>Register</Link>}
-          { identity ? null : <Link to='/login'>Login</Link>}
-          { !identity ? null : <Link to='/unregister'>Unregister</Link>}
-          { !identity ? null : <Link to='/logout'>Logout</Link>}
+          { identity ? (
+            <Nav>
+              <Link to='/unregister'>Unregister</Link>
+              <Link to='/logout'>Logout</Link>
+            </Nav>
+          ) : (
+            <Nav>
+              <Link to='/register'>Register</Link>
+              <Link to='/login'>Login</Link>
+            </Nav>
+          ) }
         </Header>
-        {this.props.children}
-      </div>
+        <Main>
+          {this.props.children}
+        </Main>
+      </Layout>
     );
   }
 

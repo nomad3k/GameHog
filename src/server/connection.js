@@ -7,10 +7,14 @@ import validate from 'validation-unchained';
 import * as State from '../shared/store/state';
 import * as Actions from '../shared/store/actions';
 import * as Events from '../shared/events';
+import * as Rooms from './rooms';
+
 import { ok, badRequest, invalidRequest, invalidOperation, authRequired, anonRequired, notImplemented } from './responses';
 
-export function connect(store) {
+export function connect(store, io) {
+
   return function(client) {
+    if (!client) throw new Error('Missing Argument: client');
 
     client.on_auth = function(message, handler) {
       client.on(message, function(args, callback) {
@@ -33,7 +37,7 @@ export function connect(store) {
 
     (function() {
       client.emit(Events.SYSTEM, { message: 'Welcome' });
-      client.broadcast.emit(Events.CLIENT_CONNECTED, {
+      io.to(Rooms.CONNECTED).emit(Events.CLIENT_CONNECTED, {
         id: client.id,
         message: 'Connected'
       });
@@ -41,7 +45,7 @@ export function connect(store) {
     })();
 
     client.on(Events.DISCONNECT, function() {
-      client.broadcast.emit(Events.CLIENT_DISCONNECTED, {
+      io.to(Rooms.CONNECTED).emit(Events.CLIENT_DISCONNECTED, {
         id: client.id,
         message: 'Disconnected'
       });
@@ -50,7 +54,7 @@ export function connect(store) {
         const { userName } = client.user;
         const pd = Actions.playerDisconnected({ userName });
         store.dispatch(pd);
-        client.broadcast.emit(Events.EVENT, pd);
+        io.to(Rooms.CONNECTED).emit(Events.EVENT, pd);
       }
     });
 
@@ -81,8 +85,7 @@ export function connect(store) {
       });
       store.dispatch(ur);
       store.dispatch(pr);
-      client.emit(Events.EVENT, pr);
-      client.broadcast.emit(Events.EVENT, pr);
+      io.to(Rooms.CONNECTED).emit(Events.EVENT, pr);
       callback(ok());
     });
 
@@ -93,11 +96,11 @@ export function connect(store) {
     client.on_auth(Events.AUTH_UNREGISTER, function(user, args, callback) {
       const uu = Actions.userUnregistered({ userName: user.userName });
       const pu = Actions.playerUnregistered({ userName: user.userName });
-      delete client.user;
       store.dispatch(uu);
       store.dispatch(pu);
-      client.emit(Events.EVENT, pu);
-      client.broadcast.emit(Events.EVENT, pu);
+      io.to(Rooms.CONNECTED).emit(Events.EVENT, pu);
+      client.leave(Rooms.CONNECTED);
+      delete client.user;
       callback(ok());
     });
 
@@ -128,16 +131,15 @@ export function connect(store) {
       const e = Actions.playerConnected({ userName: data.userName });
       store.dispatch(e);
       const players = store.getState().shared.get(State.PLAYERS).toJS();
-      const users = Object.getOwnPropertyNames(players);
-      users.forEach(userName => {
+      Object.getOwnPropertyNames(players).forEach(userName => {
         const player = players[userName];
         client.emit(Events.EVENT, Actions.playerRegistered(Object.assign({ userName }, player)));
         if (player.connected) {
           client.emit(Events.EVENT, Actions.playerConnected({ userName }));
         }
       });
-      client.emit(Events.EVENT, e);
-      client.broadcast.emit(Events.EVENT, e);
+      io.to(Rooms.CONNECTED).emit(Events.EVENT, e);
+      client.join(Rooms.CONNECTED);
       callback(ok(client.user));
     });
 
@@ -149,8 +151,8 @@ export function connect(store) {
       const pd = Actions.playerDisconnected({ userName: user.userName });
       delete client.user;
       store.dispatch(pd);
-      client.emit(Events.EVENT, pd);
-      client.broadcast.emit(Events.EVENT, pd);
+      io.to(Rooms.CONNECTED).emit(Events.EVENT, pd);
+      client.leave(Rooms.CONNECTED);
       callback(ok());
     });
 
