@@ -6,6 +6,13 @@ class ArgumentRequiredError extends Error {
   }
 }
 
+export function stateResync(state) {
+  return {
+    type: Types.STATE_RESYNC,
+    state
+  };
+}
+
 export function clientConnected({ id }) {
   if (!id) throw new ArgumentRequiredError('id');
   return {

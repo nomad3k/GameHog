@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { SubHeader, Desktop, Nav, NavItem } from 'react-controls-unchained';
+import { SubHeader, Desktop, Nav, NavItem, Button, Spacer } from 'react-controls-unchained';
 
 import Template from '../containers/template';
 import * as Actions from '../store/actions';
@@ -32,12 +32,22 @@ class Homepage extends React.Component {
     );
   }
 
+  onRefreshClick(e) {
+    const { actions } = this.props;
+    debugger;
+    actions.stateResync();
+  }
+
   render() {
     const { players } = this.props;
     return (
       <Template title='Homepage'>
         <SubHeader>
           {this.renderPlayers(players)}
+          <Spacer />
+          <Nav>
+            <Button onClick={this.onRefreshClick.bind(this)}>Refresh</Button>
+          </Nav>
         </SubHeader>
         <Desktop style={{ flex: '1 1 auto' }}>
         </Desktop>

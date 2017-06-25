@@ -1,5 +1,6 @@
 import io from 'socket.io';
 
+import * as SharedActions from '../../shared/store/actions';
 import * as Types from './types';
 import * as Events from '../../shared/events';
 
@@ -112,4 +113,20 @@ export function unregister() {
 }
 
 export function socketConnected() {
+}
+
+export function stateResync() {
+  return dispatch => {
+    return new Promise((resolve, reject) => {
+      if (!socket) return reject({ ok: false, message: 'Socket not initialised' });
+      socket.emit(Events.STATE_RESYNC, { }, response => {
+        if (response && response.ok) {
+          dispatch(SharedActions.stateResync(response.data));
+          resolve(response);
+        } else {
+          reject(response.error);
+        }
+      });
+    });
+  };
 }

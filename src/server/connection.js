@@ -59,6 +59,16 @@ export function connect(store, io) {
     });
 
     // ------------------------------------------------------------------------
+    // RESYNC_STATE
+    // ------------------------------------------------------------------------
+
+    client.on_auth(Events.STATE_RESYNC, function(user, message, callback) {
+      console.log(Events.STATE_RESYNC);
+      const state = store.getState().shared.toJS();
+      callback(ok(state));
+    });
+
+    // ------------------------------------------------------------------------
     // AUTH_REGISTER
     // ------------------------------------------------------------------------
 
