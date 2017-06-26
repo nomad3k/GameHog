@@ -13,6 +13,9 @@ export const initialState = fromJS({
 export default function reducer(state = initialState, action) {
   switch (action.type) {
 
+    case Types.STATE_RESET:
+      return initialState;
+
     case Types.STATE_RESYNC:
       return fromJS(action.state);
 

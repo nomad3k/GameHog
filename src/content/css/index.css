@@ -2,4 +2,15 @@ html, body {
   background-color: #fafcff;
   color: 444444; }
 
+.gh-system .unc-document__content {
+  background-color: #111111; }
+
+.gh-system__message {
+  font-family: monospace;
+  font-size: 14px;
+  color: green; }
+
+.unc-document__content {
+  position: relative; }
+
 /*# sourceMappingURL=index.css.map */

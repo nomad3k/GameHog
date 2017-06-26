@@ -9,4 +9,5 @@ export const PLAYER_CONNECTED     = 'Player:Connected';
 export const PLAYER_DISCONNECTED  = 'Player:Disconected';
 export const PLAYER_UNREGISTERED  = 'Player:Unregistered';
 
-export const STATE_RESYNC         = 'State:Resync';
+export const STATE_RESYNC         = 'State:Shared:Resync';
+export const STATE_RESET          = 'State:Shared:Reset';

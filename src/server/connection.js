@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import validate from 'validation-unchained';
+import crypto from 'crypto';
 // import uuid from 'uuid/v4';
 
 // import * as Types from './store/types';
@@ -10,6 +11,13 @@ import * as Events from '../shared/events';
 import * as Rooms from './rooms';
 
 import { ok, badRequest, invalidRequest, invalidOperation, authRequired, anonRequired, notImplemented } from './responses';
+
+const secret = 'Th!$ mêśšãgę wïłl š€lf dèßtrūçT įń fîvë $êćõñdś!';
+function encode(value) {
+  return crypto.createHmac('sha256', secret)
+               .update(value)
+               .digest('hex');
+}
 
 export function connect(store, io) {
 
@@ -91,7 +99,7 @@ export function connect(store, io) {
         userName, playerName, characterName
       });
       const ur = Actions.userRegistered({
-        userName, password
+        userName, password: encode(password)
       });
       store.dispatch(ur);
       store.dispatch(pr);
@@ -130,7 +138,7 @@ export function connect(store, io) {
         return callback(badRequest(errors));
       }
       const user = store.getState().shared.getIn([State.USERS, data.userName]);
-      if (!user || user.get('password') != data.password) {
+      if (!user || user.get('password') != encode(data.password)) {
         return callback(invalidRequest({ userName: ['Unknown Username or Password'] }));
       }
       const player = store.getState().shared.getIn([State.PLAYERS, data.userName]);

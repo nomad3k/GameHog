@@ -5,3 +5,15 @@ html, body {
 
 body {
 }
+
+.gh-system {
+  & .unc-document__content {
+    background-color: #111111;
+  }
+}
+
+.gh-system__message {
+  font-family: monospace;
+  font-size: 14px;
+  color: green;
+}

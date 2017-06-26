@@ -79,3 +79,9 @@ export function playerDisconnected({ userName }) {
     userName
   }
 }
+
+export function stateReset() {
+  return {
+    type: Types.STATE_RESET
+  };
+}

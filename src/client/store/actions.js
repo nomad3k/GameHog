@@ -11,15 +11,27 @@ function connect(dispatch, callback) {
 
   socket.on('connect', function() {
     console.log('socket.connect');
+    dispatch(systemMessage({ message: 'Connected' }));
     callback(socket);
+  });
+
+  socket.on('disconnect', function() {
+    console.log('socket.disconnect');
+    [
+      stateReset(),
+      SharedActions.stateReset(),
+      systemMessage({ message: 'Disconnected' })
+    ].forEach(dispatch);
   });
 
   socket.on(Events.SYSTEM, arg => {
     console.log('SYSTEM', arg);
+    dispatch(systemMessage(arg));
   });
 
   socket.on(Events.EVENT, event => {
     console.log('EVENT', event);
+    dispatch(systemMessage({ message: JSON.stringify(event) }));
     dispatch(event);
   });
 
@@ -115,6 +127,12 @@ export function unregister() {
 export function socketConnected() {
 }
 
+export function stateReset() {
+  return {
+    type: Types.STATE_RESET
+  };
+}
+
 export function stateResync() {
   return dispatch => {
     return new Promise((resolve, reject) => {
@@ -128,5 +146,12 @@ export function stateResync() {
         }
       });
     });
+  };
+}
+
+export function systemMessage({ message }) {
+  return {
+    type: Types.SYSTEM_MESSAGE,
+    message
   };
 }

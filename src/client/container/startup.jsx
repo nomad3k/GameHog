@@ -16,7 +16,17 @@ class Startup extends React.Component {
   render() {
     return this.props.socket
       ? this.props.children
-      : (<p>Loading...</p>);
+      : (
+        <div>
+          <h3>Connecting</h3>
+          <p>
+            If this happened mid-game, then it means your connection was
+            interrupted.  The game will attempt to auto-connect, and will then
+            re-load it's current state following login.
+          </p>
+          <p>You can try reloading the page.</p>
+        </div>
+      );
   }
 }
 

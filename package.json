@@ -28,6 +28,7 @@
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
     "react-addons-update": "^15.5.2",
+    "react-controls-unchained": "^0.17.0",
     "react-dom": "^15.5.4",
     "react-mdl": "^1.10.0",
     "react-redux": "^5.0.4",
