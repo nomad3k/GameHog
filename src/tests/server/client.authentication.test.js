@@ -5,6 +5,7 @@ import * as Actions from '../../shared/store/actions';
 import * as Types from '../../shared/store/types';
 import * as State from '../../shared/store/state';
 import { connect } from '../../server/connection';
+import * as Rooms from '../../server/rooms';
 import * as Events from '../../shared/events';
 import * as ResponseCodes from '../../shared/response-code';
 import MockClient from './mock-client';
@@ -13,7 +14,7 @@ import MockStore from './mock-store';
 function setup(initialiser) {
   const client = new MockClient();
   const store = new MockStore();
-  const connection = connect(store);
+  const connection = connect(store, client);
   connection(client);
   if (initialiser) {
     for (let action of initialiser()) {
@@ -58,7 +59,7 @@ describe('Client:Authentication', function() {
 
     it('should respond to the subject', function() {
       expect(response.ok).to.be.true;
-      const args = client.getArgsForSingleEvent(Events.EVENT);
+      const args = client.getArgsForSingleEvent(Events.EVENT, Rooms.CONNECTED);
       expect(args).to.deep.equal({
         type: Types.PLAYER_REGISTERED,
         userName,
@@ -68,7 +69,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should inform the observers', function() {
-      const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
+      const args = client.getArgsForSingleEvent(Events.EVENT, Rooms.CONNECTED);
       expect(args).to.deep.equal({
         type: Types.PLAYER_REGISTERED,
         userName,
@@ -81,11 +82,7 @@ describe('Client:Authentication', function() {
       const { shared } = store.getState();
       const users = shared.get(State.USERS).toJS();
       const players = shared.get(State.PLAYERS).toJS();
-      expect(users).to.deep.equal({
-        [userName]: {
-          password
-        }
-      });
+      expect(users[userName]).to.exist;
       expect(players).to.deep.equal({
         [userName]: {
           playerName,
@@ -123,7 +120,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not inform the observers', function() {
-      expect(client.broadcast.events).to.be.empty;
+      expect(client.broadcast.events[Rooms.CONNECTED]).to.be.empty;
     });
 
     it('should not amend the state', function() {
@@ -165,7 +162,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not inform the observers', function() {
-      expect(client.broadcast.events).to.be.empty;
+      expect(client.broadcast.events[Rooms.CONNECTED]).to.be.empty;
     });
 
     it('should not amend the state', function() {
@@ -180,18 +177,24 @@ describe('Client:Authentication', function() {
   describe('Login - Success', function() {
     const userName = 'xxx', password = 'yyy';
     const { client, store } = setup(function* () {
-      yield Actions.userRegistered({ userName, password });
-      yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
+      // yield Actions.userRegistered({ userName, password });
+      // yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
     });
 
     let response = null;
     before(function(done) {
-      client.trigger(Events.AUTH_LOGIN, {
-        userName,
-        password
-      }, r => {
-        response = r;
-        done();
+      client.trigger(Events.AUTH_REGISTER, {
+        userName, password, playerName: 'Foo', characterName: 'Foo'
+      }, () => {
+        client.clear();
+        store.clear();
+        client.trigger(Events.AUTH_LOGIN, {
+          userName,
+          password
+        }, r => {
+          response = r;
+          done();
+        });
       });
     });
 
@@ -211,20 +214,13 @@ describe('Client:Authentication', function() {
     });
 
     it('should inform the observers', function() {
-      const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
+      const args = client.getArgsForSingleEvent(Events.EVENT, Rooms.CONNECTED);
       expect(args).to.deep.equal({
         type: Types.PLAYER_CONNECTED,
         userName
       });
     });
 
-    it('should emit players to subject', function() {
-      const args = client.getArgsForSingleEvent(Events.EVENT);
-      expect(args).to.deep.equal({
-        type: Types.PLAYER_CONNECTED,
-        userName
-      });
-    });
   });
 
   // ---------------------------------------------------------------------------
@@ -253,7 +249,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not inform the observers', function() {
-      expect(client.broadcast.events).to.be.empty;
+      expect(client.broadcast.events[Rooms.CONNECTED]).to.be.empty;
     });
 
     it('should not amend the state', function() {
@@ -287,7 +283,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not inform the observers', function() {
-      expect(client.broadcast.events).to.be.empty;
+      expect(client.broadcast.events[Rooms.CONNECTED]).to.be.empty;
     });
 
     it('should not amend the state', function() {
@@ -325,7 +321,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not inform the observers', function() {
-      expect(client.broadcast.events).to.be.empty;
+      expect(client.broadcast.events[Rooms.CONNECTED]).to.be.empty;
     });
 
     it('should not amend the state', function() {
@@ -341,21 +337,27 @@ describe('Client:Authentication', function() {
     const userName = 'foo';
     const password = 'bah';
     const { client, store } = setup(function* () {
-      yield Actions.userRegistered({ userName, password });
-      yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
+      // yield Actions.userRegistered({ userName, password });
+      // yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
     });
 
     let initialState = null;
     let response = null;
     before(function(done) {
-      client.trigger(Events.AUTH_LOGIN, { userName, password }, _r => {
+      client.trigger(Events.AUTH_REGISTER, {
+        userName, password, playerName: 'Foo', characterName: 'Foo'
+      }, () => {
         client.clear();
-        client.broadcast.clear();
-        initialState = store.getState().shared.toJS();
-        delete client.user;
-        client.trigger(Events.AUTH_LOGIN, { userName, password }, r => {
-          response = r;
-          done();
+        store.clear();
+        client.trigger(Events.AUTH_LOGIN, { userName, password }, _r => {
+          client.clear();
+          client.broadcast.clear();
+          initialState = store.getState().shared.toJS();
+          delete client.user;
+          client.trigger(Events.AUTH_LOGIN, { userName, password }, r => {
+            response = r;
+            done();
+          });
         });
       });
     });
@@ -367,7 +369,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not inform the observers', function() {
-      expect(client.broadcast.events).to.be.empty;
+      expect(client.broadcast.events[Rooms.CONNECTED]).to.be.empty;
     });
 
     it('should not amend the state', function() {
@@ -383,22 +385,28 @@ describe('Client:Authentication', function() {
     const userName = 'foo', password = 'bah';
 
     const { client, store } = setup(function*() {
-      yield Actions.userRegistered({ userName, password });
-      yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
+      // yield Actions.userRegistered({ userName, password });
+      // yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
     });
 
     let response = null;
     before(function(done) {
-      client.trigger(Events.AUTH_LOGIN, {
-        userName,
-        password
-      }, _r => {
+      client.trigger(Events.AUTH_REGISTER, {
+        userName, password, playerName: 'Foo', characterName: 'Foo'
+      }, () => {
         client.clear();
-        client.broadcast.clear();
-        client.trigger(Events.AUTH_LOGOUT, {
-        }, r2 => {
-          response = r2;
-          done();
+        store.clear();
+        client.trigger(Events.AUTH_LOGIN, {
+          userName,
+          password
+        }, _r => {
+          client.clear();
+          client.broadcast.clear();
+          client.trigger(Events.AUTH_LOGOUT, {
+          }, r2 => {
+            response = r2;
+            done();
+          });
         });
       });
     });
@@ -424,14 +432,8 @@ describe('Client:Authentication', function() {
       expect(player.connected).to.be.false;
     });
 
-    it('should notify the subject', function() {
-      const args = client.getArgsForSingleEvent(Events.EVENT);
-      expect(args).to.exist;
-      expect(args.type).to.equal(Types.PLAYER_DISCONNECTED);
-    });
-
-    it('should notify observers', function() {
-      const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
+    it('should inform the observers', function() {
+      const args = client.getArgsForSingleEvent(Events.EVENT, Rooms.CONNECTED);
       expect(args).to.exist;
       expect(args.type).to.equal(Types.PLAYER_DISCONNECTED);
     });
@@ -461,7 +463,7 @@ describe('Client:Authentication', function() {
     });
 
     it('should not inform the observers', function() {
-      expect(client.broadcast.events).to.be.empty;
+      expect(client.broadcast.events[Rooms.CONNECTED]).to.be.empty;
     });
 
     it('should not amend the state', function() {
@@ -477,24 +479,30 @@ describe('Client:Authentication', function() {
     const userName = 'xxx', password = 'yyy';
 
     const { client, store } = setup(function*() {
-      yield Actions.userRegistered({ userName, password });
-      yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
+      // yield Actions.userRegistered({ userName, password });
+      // yield Actions.playerRegistered({ userName, playerName: 'Foo', characterName: 'Foo' });
     });
 
     let response = null;
     before(function(done) {
-      client.trigger(Events.AUTH_LOGIN, {
-        userName,
-        password
-      }, _r => {
+      client.trigger(Events.AUTH_REGISTER, {
+        userName, password, playerName: 'Foo', characterName: 'Foo'
+      }, () => {
         client.clear();
-        client.broadcast.clear();
-        client.trigger(Events.AUTH_UNREGISTER, {
-        }, r2 => {
-          response = r2;
-          done();
+        store.clear();
+        client.trigger(Events.AUTH_LOGIN, {
+          userName,
+          password
+        }, _r => {
+          client.clear();
+          client.broadcast.clear();
+          client.trigger(Events.AUTH_UNREGISTER, {
+          }, r2 => {
+            response = r2;
+            done();
+          });
         });
-      });
+      })
     });
 
     it('should register the handlers', function() {
@@ -519,14 +527,8 @@ describe('Client:Authentication', function() {
       expect(player).to.not.exist;
     });
 
-    it('should notify the subject', function() {
-      const args = client.getArgsForSingleEvent(Events.EVENT);
-      expect(args).to.exist;
-      expect(args.type).to.equal(Types.PLAYER_UNREGISTERED);
-    });
-
-    it('should notify observers', function() {
-      const args = client.broadcast.getArgsForSingleEvent(Events.EVENT);
+    it('should inform the observers', function() {
+      const args = client.getArgsForSingleEvent(Events.EVENT, Rooms.CONNECTED);
       expect(args).to.exist;
       expect(args.type).to.equal(Types.PLAYER_UNREGISTERED);
     });

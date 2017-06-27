@@ -46,7 +46,7 @@ class Homepage extends React.Component {
           {this.renderPlayers(players)}
           <Spacer />
           <Nav>
-            <Button onClick={this.onRefreshClick.bind(this)} kind='tertiary'>Refresh</Button>
+            <Button onClick={this.onRefreshClick.bind(this)}>Refresh</Button>
           </Nav>
         </SubHeader>
         <Desktop style={{ flex: '1 1 auto' }}>

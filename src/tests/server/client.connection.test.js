@@ -1,5 +1,6 @@
 import { expect } from 'chai';
 
+import * as Rooms from '../../server/rooms';
 import * as State from '../../shared/store/state';
 import { connect } from '../../server/connection';
 import * as Events from '../../shared/events';
@@ -11,16 +12,16 @@ describe('Client:Connection', function() {
   describe('Connect', function() {
     const client = new MockClient();
     const store = new MockStore();
-    const connection = connect(store);
+    const connection = connect(store, client);
     connection(client);
 
     it('should acknowledge the subject', function() {
-      const events = client.events.filter(x => x.eventName === Events.SYSTEM);
-      expect(events).to.have.length(1);
+      const event = client.getArgsForSingleEvent(Events.SYSTEM);
+      expect(event).to.exist;
     });
 
     it('should inform observers', function() {
-      const args = client.broadcast.getArgsForSingleEvent(Events.CLIENT_CONNECTED);
+      const args = client.getArgsForSingleEvent(Events.CLIENT_CONNECTED, Rooms.CONNECTED);
       expect(args).to.deep.equal({
         id: client.id,
         message: 'Connected'
@@ -39,7 +40,7 @@ describe('Client:Connection', function() {
   describe('Disconnect', function() {
     const client = new MockClient();
     const store = new MockStore();
-    const connection = connect(store);
+    const connection = connect(store, client);
     connection(client);
     client.clear();
     store.clear();
@@ -49,7 +50,7 @@ describe('Client:Connection', function() {
     });
 
     it('should inform observers', function() {
-      const args = client.broadcast.getArgsForSingleEvent(Events.CLIENT_DISCONNECTED);
+      const args = client.getArgsForSingleEvent(Events.CLIENT_DISCONNECTED, Rooms.CONNECTED);
       expect(args).to.deep.equal({
         id: client.id,
         message: 'Disconnected'
