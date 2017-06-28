@@ -6,7 +6,8 @@ class ArgumentRequiredError extends Error {
   }
 }
 
-export function stateResync(state) {
+export function stateResync({ state }) {
+  if (!state) throw new ArgumentRequiredError('state');
   return {
     type: Types.STATE_RESYNC,
     state

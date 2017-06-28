@@ -5,7 +5,7 @@ import * as Actions from '../../shared/store/actions';
 import * as Types from '../../shared/store/types';
 import * as State from '../../shared/store/state';
 
-describe('Shared Actions', function() {
+describe('Shared Integration', function() {
 
   // --------------------------------------------------------------------------
   // clientConnected

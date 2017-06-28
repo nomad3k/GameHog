@@ -139,7 +139,7 @@ export function stateResync() {
       if (!socket) return reject({ ok: false, message: 'Socket not initialised' });
       socket.emit(Events.STATE_RESYNC, { }, response => {
         if (response && response.ok) {
-          dispatch(SharedActions.stateResync(response.data));
+          dispatch(SharedActions.stateResync({ state: response.data }));
           resolve(response);
         } else {
           reject(response.error);

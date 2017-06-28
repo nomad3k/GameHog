@@ -10,7 +10,7 @@
     "clean": "rimraf ./dist",
     "style": "scss src/content/css/index.scss src/content/css/",
     "style:watch": "npm run style -- --watch",
-    "test": "mocha --compilers js:babel-register --compilers jsx:babel-register src/tests/**/*.test.js --recursive",
+    "test": "mocha --compilers js:babel-register --compilers jsx:babel-register src/**/*.test.js --recursive",
     "test:watch": "npm run test -- --watch --growl",
     "test:debug": "npm run test -- --inspect --debug-brk",
     "dist": "npm run dist:copy & npm run dist:pack",

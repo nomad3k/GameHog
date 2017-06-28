@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 
-import * as Types from '../../server/store/types';
+import * as Types from './types';
 
-describe('Server Types', function() {
+describe('Shared Types', function() {
 
   it('should have unique values', function() {
     let reverse = { };
