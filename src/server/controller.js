@@ -133,25 +133,18 @@ export default function controller({ store, io, passwords }) {
       if (errors) {
         return callback(badRequest(errors));
       }
-      const user = store.getState().shared.getIn([State.USERS, data.userName]);
+      const { server, shared } = store.getState();
+      const user = server.getIn([State.USERS, data.userName]);
       if (!user || user.get('password') != passwords.hash(data.password)) {
         return callback(invalidRequest({ userName: ['Unknown Username or Password'] }));
       }
-      const player = store.getState().shared.getIn([State.PLAYERS, data.userName]);
+      const player = shared.getIn([State.PLAYERS, data.userName]);
       if (player.get('connected')) {
         return callback(invalidRequest({ userName: ['Player already connected']}));
       }
       client.user = { userName: data.userName };
       const e = SharedActions.playerConnected({ userName: data.userName });
       store.dispatch(e);
-      const players = store.getState().shared.get(State.PLAYERS).toJS();
-      Object.getOwnPropertyNames(players).forEach(userName => {
-        const player = players[userName];
-        client.emit(Events.EVENT, SharedActions.playerRegistered(Object.assign({ userName }, player)));
-        if (player.connected) {
-          client.emit(Events.EVENT, SharedActions.playerConnected({ userName }));
-        }
-      });
       io.to(Rooms.CONNECTED).emit(Events.EVENT, e);
       client.join(Rooms.CONNECTED);
       callback(ok(client.user));
