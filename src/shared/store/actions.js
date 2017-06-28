@@ -30,23 +30,6 @@ export function clientDisconnected({ id }) {
   };
 }
 
-export function userRegistered({ userName, password }) {
-  if (!userName) throw new ArgumentRequiredError('userName');
-  if (!password) throw new ArgumentRequiredError('password');
-  return {
-    type: Types.USER_REGISTERED,
-    userName, password
-  };
-}
-
-export function userUnregistered({ userName }) {
-  if (!userName) throw new ArgumentRequiredError('userName');
-  return {
-    type: Types.USER_UNREGISTERED,
-    userName
-  };
-}
-
 export function playerRegistered({ userName, playerName, characterName }) {
   if (!userName) throw new ArgumentRequiredError('userName');
   if (!playerName) throw new ArgumentRequiredError('playerName');

@@ -3,20 +3,22 @@
 import validate from 'validation-unchained';
 // import uuid from 'uuid/v4';
 
+import * as ServerActions from '../server/store/actions';
 // import * as Types from './store/types';
+import * as SharedActions from '../shared/store/actions';
 import * as State from '../shared/store/state';
-import * as Actions from '../shared/store/actions';
 import * as Events from '../shared/events';
 import * as Rooms from './rooms';
 
 import { ok, badRequest, invalidRequest, invalidOperation, authRequired,
   anonRequired, notImplemented } from './responses';
 
-export function connect(store, passwords) {
+export default function controller({ store, io, passwords }) {
   if (!store) throw new Error('missing parameter: store');
+  if (!io) throw new Error('missing parameter: store');
   if (!passwords) throw new Error('missing parameter: passwords');
 
-  return function(client, io) {
+  return function(client) {
     if (!client) throw new Error('Missing Argument: client');
 
     client.on_auth = function(message, handler) {
@@ -44,7 +46,7 @@ export function connect(store, passwords) {
         id: client.id,
         message: 'Connected'
       });
-      store.dispatch(Actions.clientConnected(client));
+      store.dispatch(SharedActions.clientConnected(client));
     })();
 
     client.on(Events.DISCONNECT, function() {
@@ -52,10 +54,10 @@ export function connect(store, passwords) {
         id: client.id,
         message: 'Disconnected'
       });
-      store.dispatch(Actions.clientDisconnected(client));
+      store.dispatch(SharedActions.clientDisconnected(client));
       if (client.user) {
         const { userName } = client.user;
-        const pd = Actions.playerDisconnected({ userName });
+        const pd = SharedActions.playerDisconnected({ userName });
         store.dispatch(pd);
         io.to(Rooms.CONNECTED).emit(Events.EVENT, pd);
       }
@@ -89,10 +91,10 @@ export function connect(store, passwords) {
       const user = store.getState().shared.getIn([State.USERS, userName]);
       if (user) return callback(invalidOperation({ userName: ['User exists.'] }));
 
-      const pr = Actions.playerRegistered({
+      const pr = SharedActions.playerRegistered({
         userName, playerName, characterName
       });
-      const ur = Actions.userRegistered({
+      const ur = ServerActions.userRegistered({
         userName, password: passwords.hash(password)
       });
       store.dispatch(ur);
@@ -106,8 +108,8 @@ export function connect(store, passwords) {
     // -------------------------------------------------------------------------
 
     client.on_auth(Events.AUTH_UNREGISTER, function(user, args, callback) {
-      const uu = Actions.userUnregistered({ userName: user.userName });
-      const pu = Actions.playerUnregistered({ userName: user.userName });
+      const uu = ServerActions.userUnregistered({ userName: user.userName });
+      const pu = SharedActions.playerUnregistered({ userName: user.userName });
       store.dispatch(uu);
       store.dispatch(pu);
       io.to(Rooms.CONNECTED).emit(Events.EVENT, pu);
@@ -140,14 +142,14 @@ export function connect(store, passwords) {
         return callback(invalidRequest({ userName: ['Player already connected']}));
       }
       client.user = { userName: data.userName };
-      const e = Actions.playerConnected({ userName: data.userName });
+      const e = SharedActions.playerConnected({ userName: data.userName });
       store.dispatch(e);
       const players = store.getState().shared.get(State.PLAYERS).toJS();
       Object.getOwnPropertyNames(players).forEach(userName => {
         const player = players[userName];
-        client.emit(Events.EVENT, Actions.playerRegistered(Object.assign({ userName }, player)));
+        client.emit(Events.EVENT, SharedActions.playerRegistered(Object.assign({ userName }, player)));
         if (player.connected) {
-          client.emit(Events.EVENT, Actions.playerConnected({ userName }));
+          client.emit(Events.EVENT, SharedActions.playerConnected({ userName }));
         }
       });
       io.to(Rooms.CONNECTED).emit(Events.EVENT, e);
@@ -160,7 +162,7 @@ export function connect(store, passwords) {
     // -------------------------------------------------------------------------
 
     client.on_auth(Events.AUTH_LOGOUT, function(user, args, callback) {
-      const pd = Actions.playerDisconnected({ userName: user.userName });
+      const pd = SharedActions.playerDisconnected({ userName: user.userName });
       delete client.user;
       store.dispatch(pd);
       io.to(Rooms.CONNECTED).emit(Events.EVENT, pd);

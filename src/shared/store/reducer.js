@@ -6,7 +6,6 @@ import * as State from './state';
 
 export const initialState = fromJS({
   [State.CLIENTS]: { },
-  [State.USERS]: { },
   [State.PLAYERS]: { }
 });
 
@@ -17,7 +16,7 @@ export default function reducer(state = initialState, action) {
       return initialState;
 
     case Types.STATE_RESYNC:
-      return fromJS(action.state);
+      return Map.isMap(action.state) ? action.state : fromJS(action.state);
 
     case Types.CLIENT_CONNECTED:
       return state.setIn(
@@ -27,21 +26,6 @@ export default function reducer(state = initialState, action) {
 
     case Types.CLIENT_DISCONNECTED:
       return state.deleteIn([State.CLIENTS, action.id]);
-
-    case Types.USER_REGISTERED: {
-      const { userName, password } = action;
-      return state.setIn(
-        [State.USERS, userName],
-        Map({ password })
-      );
-    }
-
-    case Types.USER_UNREGISTERED: {
-      const { userName } = action;
-      return state.deleteIn(
-        [State.USERS, userName],
-      );
-    }
 
     case Types.PLAYER_REGISTERED: {
       const { userName, playerName, characterName } = action;

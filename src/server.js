@@ -10,7 +10,8 @@ import SocketIO from 'socket.io';
 import config from './cfg/config';
 import webpackConfig from './cfg/webpack.config.dev.js';
 import createStore from './server/store/store';
-import { connect } from './server/controller';
+import controller from './server/controller';
+import * as passwords from './server/passwords';
 
 console.log('Starting...');
 
@@ -40,7 +41,7 @@ const io = SocketIO(server);
 
 const store = createStore();
 
-io.on('connection', connect(store, io));
+io.on('connection', controller({ store, io, passwords }));
 
 server.listen(config.port, () => {
   console.log(`Running on http://localhost:${config.port}/`);

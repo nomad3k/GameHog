@@ -8,34 +8,30 @@ describe('Shared Actions', function() {
   // stateResync
   // ---------------------------------------------------------------------------
 
-  describe('stateResync', function() {
-    it('should return action', function() {
-      let state = { foo: 1, bah: 2 };
+  it('stateResync should return action', function() {
+    let state = { foo: 1, bah: 2 };
 
-      let subject = Actions.stateResync({ state, extra: 1 });
+    let subject = Actions.stateResync({ state, extra: 1 });
 
-      expect(subject).to.deep.equal({
-        type: Types.STATE_RESYNC,
-        state
-      });
-      expect(subject.type).to.exist;
+    expect(subject).to.deep.equal({
+      type: Types.STATE_RESYNC,
+      state
     });
+    expect(subject.type).to.exist;
   });
 
   // ---------------------------------------------------------------------------
   // clientConnected
   // ---------------------------------------------------------------------------
 
-  describe('clientConnected', function() {
-    it('should return action', function() {
-      let id = '7dtf8yg9uhu9g7tg';
+  it('clientConnected should return action', function() {
+    let id = '7dtf8yg9uhu9g7tg';
 
-      let subject = Actions.clientConnected({ id, extra: 324 });
+    let subject = Actions.clientConnected({ id, extra: 324 });
 
-      expect(subject).to.deep.equal({
-        type: Types.CLIENT_CONNECTED,
-        id
-      });
+    expect(subject).to.deep.equal({
+      type: Types.CLIENT_CONNECTED,
+      id
     });
   });
 
@@ -43,128 +39,82 @@ describe('Shared Actions', function() {
   // clientDisconnected
   // ---------------------------------------------------------------------------
 
-  describe('clientDisconnected', function() {
-    it('should return action', function() {
-      let id = '23fv53t4r23efethr6yt';
+  it('clientDisconnected should return action', function() {
+    let id = '23fv53t4r23efethr6yt';
 
-      let subject = Actions.clientDisconnected({ id });
+    let subject = Actions.clientDisconnected({ id });
 
-      expect(subject).to.deep.equal({
-        type: Types.CLIENT_DISCONNECTED,
-        id
-      });
-      expect(subject.type).to.exist;
+    expect(subject).to.deep.equal({
+      type: Types.CLIENT_DISCONNECTED,
+      id
     });
-  });
-
-  // ---------------------------------------------------------------------------
-  // userRegistered
-  // ---------------------------------------------------------------------------
-
-  describe('userRegistered', function() {
-    it('should return action', function() {
-      let userName = 'foo', password = 'bah';
-
-      let subject = Actions.userRegistered({ userName, password });
-
-      expect(subject).to.deep.equal({
-        type: Types.USER_REGISTERED,
-        userName, password
-      });
-      expect(subject.type).to.exist;
-    });
-  });
-
-  // ---------------------------------------------------------------------------
-  // userUnregistered
-  // ---------------------------------------------------------------------------
-
-  describe('userUnregistered', function() {
-    it('should return action', function() {
-      let userName = 'sdfsfsd';
-
-      let subject = Actions.userUnregistered({ userName });
-
-      expect(subject).to.deep.equal({
-        type: Types.USER_UNREGISTERED,
-        userName
-      });
-      expect(subject.type).to.exist;
-    });
+    expect(subject.type).to.exist;
   });
 
   // ---------------------------------------------------------------------------
   // playerRegistered
   // ---------------------------------------------------------------------------
 
-  describe('playerRegistered', function() {
-    it('should return action', function() {
-      let userName = 'g8yvibhuo9g7u',
-          playerName = '098f6tuvihbuoh97f86',
-          characterName = '-908h9gyivuh jbvtc';
+  it('playerRegistered should return action', function() {
+    let userName = 'g8yvibhuo9g7u',
+        playerName = '098f6tuvihbuoh97f86',
+        characterName = '-908h9gyivuh jbvtc';
 
-      let subject = Actions.playerRegistered({ userName, playerName, characterName });
+    let subject = Actions.playerRegistered({ userName, playerName, characterName });
 
-      expect(subject).to.deep.equal({
-        type: Types.PLAYER_REGISTERED,
-        userName, playerName, characterName
-      });
-      expect(subject.type).to.exist;
+    expect(subject).to.deep.equal({
+      type: Types.PLAYER_REGISTERED,
+      userName, playerName, characterName
     });
+    expect(subject.type).to.exist;
   });
 
   // ---------------------------------------------------------------------------
   // playerUnregistered
   // ---------------------------------------------------------------------------
 
-  describe('playerUnregistered', function() {
-    it('should return action', function() {
-      let userName = 'sdfsfsdfsdfsfsEF2';
+  it('playerUnregistered should return action', function() {
+    let userName = 'sdfsfsdfsdfsfsEF2';
 
-      let subject = Actions.playerUnregistered({ userName })
+    let subject = Actions.playerUnregistered({ userName })
 
-      expect(subject).to.deep.equal({
-        type: Types.PLAYER_UNREGISTERED,
-        userName
-      });
-      expect(subject.type).to.exist;
+    expect(subject).to.deep.equal({
+      type: Types.PLAYER_UNREGISTERED,
+      userName
     });
+    expect(subject.type).to.exist;
   });
 
   // ---------------------------------------------------------------------------
   // playerConnected
   // ---------------------------------------------------------------------------
 
-  describe('playerConnected', function() {
-    it('should return action', function() {
-      let userName = 'pijh9gyibhj8768ftyibui';
+  it('playerConnected should return action', function() {
+    let userName = 'pijh9gyibhj8768ftyibui';
 
-      let subject = Actions.playerConnected({ userName });
+    let subject = Actions.playerConnected({ userName });
 
-      expect(subject).to.deep.equal({
-        type: Types.PLAYER_CONNECTED,
-        userName
-      });
-      expect(subject.type).to.exist;
+    expect(subject).to.deep.equal({
+      type: Types.PLAYER_CONNECTED,
+      userName
     });
+    expect(subject.type).to.exist;
   });
 
   // ---------------------------------------------------------------------------
   // playerDisconnected
   // ---------------------------------------------------------------------------
 
-  describe('playerDisconnected', function() {
-    it('should return action', function() {
-      let userName = 'slkuibu897g8fyivb97g';
+  it('playerDisconnected should return action', function() {
+    let userName = 'slkuibu897g8fyivb97g';
 
-      let subject = Actions.playerDisconnected({ userName });
+    let subject = Actions.playerDisconnected({ userName });
 
-      expect(subject).to.deep.equal({
-        type: Types.PLAYER_DISCONNECTED,
-        userName
-      });
-      expect(subject.type).to.exist;
+    expect(subject).to.deep.equal({
+      type: Types.PLAYER_DISCONNECTED,
+      userName
     });
+    expect(subject.type).to.exist;
   });
 
 
@@ -172,16 +122,14 @@ describe('Shared Actions', function() {
   // stateReset
   // ---------------------------------------------------------------------------
 
-  describe('stateReset', function() {
-    it('should return action', function() {
+  it('stateReset should return action', function() {
 
-      let subject = Actions.stateReset();
+    let subject = Actions.stateReset();
 
-      expect(subject).to.deep.equal({
-        type: Types.STATE_RESET
-      });
-      expect(subject.type).to.exist;
+    expect(subject).to.deep.equal({
+      type: Types.STATE_RESET
     });
+    expect(subject.type).to.exist;
   });
 
 });
