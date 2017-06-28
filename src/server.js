@@ -10,7 +10,7 @@ import SocketIO from 'socket.io';
 import config from './cfg/config';
 import webpackConfig from './cfg/webpack.config.dev.js';
 import createStore from './server/store/store';
-import { connect } from './server/connection';
+import { connect } from './server/controller';
 
 console.log('Starting...');
 

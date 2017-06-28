@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import * as State from '../../shared/store/state';
-import { connect } from '../../server/connection';
+import { connect } from '../../server/controller';
 import * as Events from '../../shared/events';
 import MockClient from './mock-client';
 import MockStore from './mock-store';

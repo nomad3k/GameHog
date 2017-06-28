@@ -4,7 +4,8 @@ import { expect } from 'chai';
 import * as Actions from '../../shared/store/actions';
 import * as Types from '../../shared/store/types';
 import * as State from '../../shared/store/state';
-import { connect } from '../../server/connection';
+import { connect } from '../../server/controller';
+import * as passwords from '../../server/passwords';
 import * as Rooms from '../../server/rooms';
 import * as Events from '../../shared/events';
 import * as ResponseCodes from '../../shared/response-code';
@@ -14,8 +15,8 @@ import MockStore from './mock-store';
 function setup(initialiser) {
   const client = new MockClient();
   const store = new MockStore();
-  const connection = connect(store, client);
-  connection(client);
+  const connection = connect(store, passwords);
+  connection(client, client);
   if (initialiser) {
     for (let action of initialiser()) {
       store.dispatch(action);

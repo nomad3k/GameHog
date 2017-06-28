@@ -2,7 +2,8 @@ import { expect } from 'chai';
 
 import * as Rooms from '../../server/rooms';
 import * as State from '../../shared/store/state';
-import { connect } from '../../server/connection';
+import { connect } from '../../server/controller';
+import * as passwords from '../../server/passwords';
 import * as Events from '../../shared/events';
 import MockClient from './mock-client';
 import MockStore from './mock-store';
@@ -12,8 +13,8 @@ describe('Client:Connection', function() {
   describe('Connect', function() {
     const client = new MockClient();
     const store = new MockStore();
-    const connection = connect(store, client);
-    connection(client);
+    const connection = connect(store, passwords);
+    connection(client, client);
 
     it('should acknowledge the subject', function() {
       const event = client.getArgsForSingleEvent(Events.SYSTEM);
@@ -40,8 +41,8 @@ describe('Client:Connection', function() {
   describe('Disconnect', function() {
     const client = new MockClient();
     const store = new MockStore();
-    const connection = connect(store, client);
-    connection(client);
+    const connection = connect(store, passwords);
+    connection(client, client);
     client.clear();
     store.clear();
 

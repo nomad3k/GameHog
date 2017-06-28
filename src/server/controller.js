@@ -1,7 +1,6 @@
 /* eslint-disable no-unused-vars */
 
 import validate from 'validation-unchained';
-import crypto from 'crypto';
 // import uuid from 'uuid/v4';
 
 // import * as Types from './store/types';
@@ -10,18 +9,14 @@ import * as Actions from '../shared/store/actions';
 import * as Events from '../shared/events';
 import * as Rooms from './rooms';
 
-import { ok, badRequest, invalidRequest, invalidOperation, authRequired, anonRequired, notImplemented } from './responses';
+import { ok, badRequest, invalidRequest, invalidOperation, authRequired,
+  anonRequired, notImplemented } from './responses';
 
-const secret = 'Th!$ mêśšãgę wïłl š€lf dèßtrūçT įń fîvë $êćõñdś!';
-function encode(value) {
-  return crypto.createHmac('sha256', secret)
-               .update(value)
-               .digest('hex');
-}
+export function connect(store, passwords) {
+  if (!store) throw new Error('missing parameter: store');
+  if (!passwords) throw new Error('missing parameter: passwords');
 
-export function connect(store, io) {
-
-  return function(client) {
+  return function(client, io) {
     if (!client) throw new Error('Missing Argument: client');
 
     client.on_auth = function(message, handler) {
@@ -71,7 +66,6 @@ export function connect(store, io) {
     // ------------------------------------------------------------------------
 
     client.on_auth(Events.STATE_RESYNC, function(user, message, callback) {
-      console.log(Events.STATE_RESYNC);
       const state = store.getState().shared.toJS();
       callback(ok(state));
     });
@@ -99,7 +93,7 @@ export function connect(store, io) {
         userName, playerName, characterName
       });
       const ur = Actions.userRegistered({
-        userName, password: encode(password)
+        userName, password: passwords.hash(password)
       });
       store.dispatch(ur);
       store.dispatch(pr);
@@ -138,7 +132,7 @@ export function connect(store, io) {
         return callback(badRequest(errors));
       }
       const user = store.getState().shared.getIn([State.USERS, data.userName]);
-      if (!user || user.get('password') != encode(data.password)) {
+      if (!user || user.get('password') != passwords.hash(data.password)) {
         return callback(invalidRequest({ userName: ['Unknown Username or Password'] }));
       }
       const player = store.getState().shared.getIn([State.PLAYERS, data.userName]);
